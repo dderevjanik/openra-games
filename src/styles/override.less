@@ -1,34 +1,180 @@
 @primary-color: #d92c2c;
+@layout-body-background: transparent;
+@text-color: #fff;
+@slider-margin: 2px 7px;
+@slider-handle-color: @primary-color;
+@slider-track-background-color: @primary-color;
+@slider-track-background-color-hover: @primary-color;
 
-@primary-1: #410101; // Table cells hover bkcg
-@primary-2: yellow; // Right Range Slider
-@primary-3: blue; // Left Range Slider
-@primary-4: violet; // Range Slider hover
+.filters {
+  // Give the rows some place to breathe.
+  .ant-row {
+    display: flex;
+    margin: 10px 0;
 
-// @background-color-light : green;  // background of header and selected item
-// @background-color-base  : yellow;  // Default grey background color
+    & > label {
+      width: 60px;
+    }
 
+    & > div {
+      flex-grow: 1;
 
-// @item-hover-bg: @primary-color;
-@text-color: white; // Text color
+      // Add a distance to all following checkbox labels.
+      label:nth-child(1n + 2) {
+        margin-left: 10px;
+      }
+    }
+  }
 
-@background-color-light: #272d2c; // Multi Select Item Bckg
-@component-background: #141414; // Select Bckg, Table Expand Btn Bckg, Pagination Btns Bckg
+  .ant-select-selection--multiple {
+    min-height: 24px;
+    height: 24px;
+  }
 
-@body-background: black;
+  // Hide the outer box
+  .ant-select.tags {
+    .ant-select-selection {
+      background: transparent;
+      padding: 0;
+      border: 0;
 
-@layout-body-background: #141414; // Table Cells Bckg
+      // Remove double spacing.
+      & > * {
+        margin: 0;
+      }
 
+      // Again, remove double spacing and make transparent background.
+      ul > li.ant-select-selection__choice {
+        background: transparent;
+        margin: 0;
 
-@heading-color: white; // Title near OpenRA Logo, Section Header, Headers in Table
+        // Add spacing between items.
+        & + li {
+          margin-left: 10px;
+        }
+      }
 
-@input-bg: black; // Input Backgrounds
-@input-color: hsv(0, 0, 85%);
+      // Align icons and text
+      .ant-select-selection__choice__content {
+        display: flex;
+        align-items: center;
 
+        img {
+          margin-right: 5px;
+        }
+      }
 
-@border-color-base: #d92c2c; // Input border color, Multi Select border Color
+      // Align remove x and style it.
+      .ant-select-selection__choice__remove {
+        top: 1px;
+        color: #888;
 
-// @popover-bg: green;
-// @heading-color-dark: green;
-// @back-top-color: blue;
-@table-expanded-row-bg: #272d2c;
+        &:hover {
+          color: @primary-color;
+        }
+      }
+
+      // Also align this thing!
+      .ant-select-search {
+        margin-top: 0;
+
+        .ant-select-search__field {
+          min-width: 50px;
+          border-bottom: 1px dashed @primary-color;
+        }
+      }
+    }
+  }
+
+  // Version select
+  .ant-select:not(.tags) {
+    .ant-select-selection {
+      background: transparent;
+      border-radius: 0;
+      height: 24px;
+    }
+
+    .ant-select-arrow {
+      color: #fff;
+    }
+
+    .ant-select-selection__rendered {
+      line-height: 21px;
+      margin: 0 10px;
+    }
+
+    .ant-select-arrow {
+      right: 8px;
+      top: 12px;
+    }
+  }
+
+  // Dropdowns
+  .ant-select-dropdown {
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 0;
+    box-shadow: 0 0 5px 0 rgba(255, 255, 255, 0.25);
+
+    .ant-select-dropdown-menu-item-selected, .ant-select-dropdown-menu-item-active {
+      background: transparent;
+      color: @primary-color;
+    }
+  }
+
+  .ant-input-search input {
+    border-radius: 0;
+  }
+
+  .searchname input {
+    background: transparent;
+  }
+}
+
+// Games table.
+.ant-table-wrapper.games .ant-table {
+  border-radius: 0;
+  border: 0;
+
+  & .ant-table-content > .ant-table-body > table {
+    padding: 0;
+    border-radius: 0;
+
+    & > thead.ant-table-thead > tr > th {
+      background: transparent;
+      color: #fff;
+      border-bottom: 1px solid #fff;
+    }
+
+    & > tbody.ant-table-tbody > tr:not(:last-child) > td {
+      border-bottom: 1px solid #fff;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    & > tbody.ant-table-tbody > tr:hover > td {
+      background: transparent;
+
+      & > div > div > span {
+        color: @primary-color !important;
+      }
+    }
+  }
+
+  .ant-tag {
+    background: transparent;
+  }
+
+  .players > div{
+    margin-left: 10px;
+
+    & > div:nth-child(1n + 2) {
+      text-align: left;
+    }
+  }
+
+  .ant-table-row-expand-icon {
+    background: transparent;
+  }
+}

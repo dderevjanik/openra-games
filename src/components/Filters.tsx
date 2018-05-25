@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import Row from "antd/lib/row";
-import Col from "antd/lib/col";
 import Select from "antd/lib/select";
 import Input from "antd/lib/input";
 import Checkbox from "antd/lib/checkbox";
@@ -30,38 +29,44 @@ export class Filters extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     return (
-      <div>
+      <div className={"filters"}>
         <Row>
-          Show:
-          <Checkbox checked={props.showPlaying} onChange={e => props.onFilterChange("showPlaying", e.target.checked)}>
-            Playing
-          </Checkbox>
-          <Checkbox checked={props.showWaiting} onChange={e => props.onFilterChange("showWaiting", e.target.checked)}>
-            Waiting
-          </Checkbox>
-          <Checkbox checked={props.locked} onChange={e => props.onFilterChange("locked", e.target.checked)}>
-            Locked
-          </Checkbox>
+          <label>Show:</label>
+          <div>
+            <Checkbox checked={props.showPlaying} onChange={e => props.onFilterChange("showPlaying", e.target.checked)}>
+              Playing
+            </Checkbox>
+            <Checkbox checked={props.showWaiting} onChange={e => props.onFilterChange("showWaiting", e.target.checked)}>
+              Waiting
+            </Checkbox>
+            <Checkbox checked={props.locked} onChange={e => props.onFilterChange("locked", e.target.checked)}>
+              Locked
+            </Checkbox>
+          </div>
         </Row>
         <Row>
-          Mods:{" "}
-          <Select
-            mode="tags"
-            value={props.games}
-            tokenSeparators={[","]}
-            onChange={values => props.onFilterChange("games", values as string[])}
-            style={{ minWidth: 200 }}
-          >
-            {Data.mods.map((mod, index) => (
-              <Select.Option key={index} value={mod.mod}>
-                <img width="16" height="16" alt={mod.name} src={`icons/${mod.icon}`} /> {mod.name}
-              </Select.Option>
-            ))}
-          </Select>
+          <label>Mods:</label>
+          <div>
+            <Select
+              mode="tags"
+              value={props.games}
+              tokenSeparators={[","]}
+              onChange={values => props.onFilterChange("games", values as string[])}
+              style={{ minWidth: 200 }}
+              className={"tags"}
+              getPopupContainer={(target) => target as HTMLElement}
+            >
+              {Data.mods.map((mod, index) => (
+                <Select.Option key={index} value={mod.mod}>
+                  <img width="16" height="16" alt={mod.name} src={`icons/${mod.icon}`} /> {mod.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
         </Row>
         <Row>
           <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
-            <i className="fa fa-filter" /> Show Filters
+            <i className="fa fa-filter" /> Show advanced filters
           </a>
         </Row>
         {state.showAdvancedFilters ? (
@@ -77,6 +82,7 @@ export class Filters extends React.Component<Props, State> {
             placeholder="Search for a game..."
             value={props.search}
             onChange={e => props.onFilterChange("search", e.target.value)}
+            className={"searchname"}
           />
         </Row>
       </div>

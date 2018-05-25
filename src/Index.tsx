@@ -128,6 +128,7 @@ class App extends React.Component<{}, State> {
             </Row>
           )}
           pagination={false}
+          className={"games"}
         >
           <Table.Column
             title="Mod"
