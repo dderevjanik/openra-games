@@ -1,20 +1,39 @@
 import * as React from "react";
 import Fuzzy from "fuzzysearch";
 import { render } from "react-dom";
-import { TGame } from "../types/TGame";
-import { fetchGames } from "./Apiz";
-import { Card, Icon, Avatar, Row, Col, List, Select, Slider, Checkbox, Input, Layout } from "antd";
-import { Data } from "./data/Data";
-import { GameItem } from "./components/GameItem";
-import { TFilter } from "../types/TFilter";
-import { Filters } from "./components/Filters";
-const { Meta } = Card;
+import { TGame } from "./types/TGame";
+import chunk from "lodash.chunk";
+import { Map } from "./components/Map";
+import { fetchGames, fetchOpenRAVersions, fetchMaps, fetchMap } from "./Apiz";
+// import {  Table, Tooltip, Pagination } from "antd";
 
-const OPENRA_CURRENT_VERSION = 20180307;
+import Layout from "antd/lib/layout";
+import Table from "antd/lib/table";
+import Tooltip from "antd/lib/tooltip";
+import Pagination from "antd/lib/pagination";
+import Tag from "antd/lib/tag";
+import Row from "antd/lib/row";
+import Col from "antd/lib/col";
+import Button from "antd/lib/button";
+
+import { Data } from "./data/Data";
+import { TFilter } from "./types/TFilter";
+import { Filters } from "./components/Filters";
+import { TMap } from "./types/TMap";
+import { version } from "moment";
+import "./styles/main.less";
+import { ClientsInfo } from "./components/ClientsInfo";
+import { ClientLabel } from "./components/ClientLabel";
 
 type State = {
   games: TGame[];
+  maps: TMap[];
+  pagination: {
+    current: number;
+    total: number;
+  };
   filteredGames: TGame[];
+  versions: string[];
   filters: TFilter;
 };
 
@@ -23,41 +42,62 @@ class App extends React.Component<{}, State> {
     super(props);
     this.state = {
       games: [],
+      maps: [],
       filteredGames: [],
+      versions: [],
+      pagination: {
+        current: 1,
+        total: 1
+      },
       filters: {
         locked: true,
-        games: ["ra", "cnc", "d2k"],
-        players: [0, 8],
+        games: ["ra", "cnc"],
+        players: [0, 10],
         search: "",
-        showPlaying: true,
+        showPlaying: false,
         showWaiting: true,
-        version: "release-20180307"
+        version: "release-20180307" // Doesn't matter, will change right after it fetch versions list and will be replaced be newest one
       }
     };
   }
 
   filterGames(games: TGame[], filters: TFilter) {
-    const filtered = games
-      .filter(g => g.version === filters.version)
+    const searchWord = filters.search.toLowerCase();
+    const versioned = filters.version === "-- ALL --" ? games : games.filter(g => g.version === filters.version);
+    const filtered = versioned
       .filter(g => filters.games.includes(g.mod))
-      .filter(g => g.players > filters.players[0] && g.players < filters.players[1])
+      .filter(g => g.players >= filters.players[0] && g.players <= filters.players[1])
       .filter(g => (filters.locked ? true : g.protected === false))
-      .filter(g => (filters.showPlaying ? true : g.state === 2))
-      .filter(g => (filters.showWaiting ? true : g.state === 1));
-    return filters.search.length < 3 ? filtered : filtered.filter(g => Fuzzy(filters.search, g.name));
+      .filter(g => (filters.showPlaying ? true : g.state === 1))
+      .filter(g => (filters.showWaiting ? true : g.state === 2));
+    const found = filters.search.length < 3 ? filtered : filtered.filter(g => Fuzzy(searchWord, g.name.toLowerCase()));
+    const pages = Math.ceil(parseInt((found.length / 10).toFixed(1)));
+    console.log(pages);
+    return {
+      pagination: {
+        current: 1, // TODO: last page
+        total: pages
+      },
+      filteredGames: found
+    };
   }
 
   async componentDidMount() {
-    const games = await fetchGames();
-    const filteredGames = this.filterGames(games, this.state.filters);
+    const [games, versions] = await Promise.all([fetchGames(), fetchOpenRAVersions()]);
+    const updatedFilter = {
+      ...this.state.filters,
+      version: versions.release
+    };
+    const filteredGames = this.filterGames(games, updatedFilter);
     this.setState({
       games,
-      filteredGames
+      ...filteredGames,
+      versions: versions.known_versions,
+      filters: updatedFilter
     });
   }
 
   onFilterChange = <F extends keyof TFilter>(filter: F, newValue: TFilter[F]) => {
-    console.log("filter has been changed");
     const filters = {
       ...this.state.filters,
       [filter]: newValue
@@ -65,21 +105,83 @@ class App extends React.Component<{}, State> {
     const filteredGames = this.filterGames(this.state.games, filters);
     this.setState({
       filters,
-      filteredGames
+      ...filteredGames
     });
   };
 
   render() {
+    const { props, state } = this;
     return (
-      <div style={{ padding: "10px" }}>
-        <Filters {...this.state.filters} onFilterChange={this.onFilterChange} />
-        {this.state.filteredGames.filter(game => game.version === this.state.filters.version).map((game, index) => (
-          <span key={index}>
-            <GameItem game={game} />
-            <hr />
-          </span>
-        ))}
-      </div>
+      <Layout>
+        <Filters {...this.state.filters} onFilterChange={this.onFilterChange} versions={this.state.versions} />
+        <Table
+          dataSource={this.state.filteredGames}
+          size={"small"}
+          expandedRowRender={(record: TGame) => (
+            <Row>
+              <Col span={8}>
+                <Map id={record.id.toString()} hash={record.map} clients={record.clients} />
+              </Col>
+              <Col span={16}>
+                <ClientsInfo mod={record.mod} clients={record.clients} orientation={"horizontal"} />
+              </Col>
+            </Row>
+          )}
+          pagination={false}
+        >
+          <Table.Column
+            title="Mod"
+            dataIndex="mod"
+            width={50}
+            render={(text: any, record: TGame) => (
+              <div>
+                <img src={`icons/${record.mod}.png`} height={24} />
+              </div>
+            )}
+          />
+          <Table.Column
+            title="Name"
+            render={(text: any, record: TGame) => (
+              <div>
+                <div>
+                  {record.protected ? (
+                    <Tooltip title={"Game is password protected"}>
+                      <i className="fa fa-lock" />
+                    </Tooltip>
+                  ) : null}{" "}
+                  <span style={{ color: record.state === 1 ? "inherit" : "green" }}>{record.name}</span>
+                </div>
+                <div>
+                  <small>{undefined}</small>
+                </div>
+              </div>
+            )}
+          />
+          <Table.Column
+            title="Players"
+            width={80}
+            render={(text: any, record: TGame) => (
+              <div>
+                {record.players} / {record.maxplayers}
+              </div>
+            )}
+          />
+          <Table.Column width={100} render={(text: any, record: TGame) => <ClientLabel game={record} />} />
+          <Table.Column
+            width={100}
+            render={(text: any, record: TGame) => (
+              <div>
+                {// Don't show Join button on running games, neither on full servers
+                record.state === 1 && record.players !== record.maxplayers ? (
+                  <Button type="ghost" href="">
+                    Join
+                  </Button>
+                ) : null}
+              </div>
+            )}
+          />
+        </Table>
+      </Layout>
     );
   }
 }

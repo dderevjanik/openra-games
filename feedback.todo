@@ -1,0 +1,16 @@
+there seems to be quite a bit of unused space on the left when expanding the game info
+and checkbox to filter out empty games? :)
+looks good otherwise, imho
+(well, we might not need to show the map hash)
+
+hm, can't really say anythign about implementation but you could try to use a column per team instead of stacking them
+on the otherhand that becaomes problematic whne there are more than 2 teams
+probably not a good idea
+
+would it be possible to have a "Join game" button that launches the game with arguments to join that lobby?
+if we would want that
+
+IMO the map uid there is just clutter
+it doesn't convey any meaningful info to a human viewer
+assuming thats what the hash below the title is
+you can save probably 1/3 of your vertical height by removing that then reducing the row height
