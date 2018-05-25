@@ -174,7 +174,7 @@ class App extends React.Component<{}, State> {
               <div>
                 {// Don't show Join button on running games, neither on full servers
                 record.state === 1 && record.players !== record.maxplayers ? (
-                  <Button type="ghost" href="">
+                  <Button type="ghost" href={`openra-ra-release-20180307://${record.address}`}>
                     Join
                   </Button>
                 ) : null}
