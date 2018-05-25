@@ -16,7 +16,14 @@ const Team = (props: { mod: string; team: string; members: TGame["clients"] }) =
         <img src={`icons/${props.mod}_${member.faction.toLowerCase()}.png`} />{" "}
         {member.isadmin ? <i className="fa fa-start" /> : null} {member.isbot ? <i className="fa fa-desktop" /> : null}{" "}
         {member.isspectator ? <i className="fa fa-eye" /> : null}
-        <span style={{ color: "#" + member.color }}>{" " + member.name}</span>
+        <span
+          style={{
+            color: "#" + member.color,
+            textShadow: "1px 1px 0 rgba(255, 255, 255, 0.4)"
+          }}
+        >
+          {" " + member.name}
+        </span>
       </div>
     ))}
   </div>

@@ -160,6 +160,7 @@ class App extends React.Component<{}, State> {
           <Table.Column
             title="Players"
             width={80}
+            sorter={(a: TGame, b: TGame) => a.mod.length - b.mod.length}
             render={(text: any, record: TGame) => (
               <div>
                 {record.players} / {record.maxplayers}
