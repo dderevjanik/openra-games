@@ -27,7 +27,7 @@ export class ClientsInfo extends React.Component<Props, {}> {
     const { clients, mod, orientation } = this.props;
     const teams = groupBy(clients, "team");
     return (
-      <div style={{ display: "flex", flexDirection: orientation === "horizontal" ? "row" : "column" }}>
+      <div style={{ display: "flex", flexDirection: orientation === "horizontal" ? "row" : "column" }} className={"players"}>
         {Object.keys(teams).map(key => <Team key={key} mod={mod} team={key} members={teams[key]} />)}
       </div>
     );

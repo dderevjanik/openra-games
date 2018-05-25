@@ -19,7 +19,8 @@ export class ClientLabel extends React.Component<Props> {
       return null;
     }
     return (
-      <Tooltip title={<ClientsInfo clients={props.game.clients} mod={props.game.mod} orientation={"vertical"} />}>
+      <Tooltip title={<ClientsInfo clients={props.game.clients} mod={props.game.mod} orientation={"vertical"} />}
+               getPopupContainer={(target) => target as HTMLElement}>
         <Tag>
           {props.game.players > 0 ? (
             <span>
