@@ -133,7 +133,16 @@ class App extends React.Component<{}, State> {
           <Table.Column
             title="Mod"
             dataIndex="mod"
-            width={50}
+            width={70}
+            sorter={(a: TGame, b: TGame) => {
+              if (a.mod < b.mod) {
+                return -1;
+              }
+              if (a.mod > b.mod) {
+                return 1;
+              }
+              return 0;
+            }}
             render={(text: any, record: TGame) => (
               <div>
                 <img src={`icons/${record.mod}.png`} height={24} />
@@ -142,6 +151,15 @@ class App extends React.Component<{}, State> {
           />
           <Table.Column
             title="Name"
+            sorter={(a: TGame, b: TGame) => {
+              if (a.name < b.name) {
+                return -1;
+              }
+              if (a.name > b.name) {
+                return 1;
+              }
+              return 0;
+            }}
             render={(text: any, record: TGame) => (
               <div>
                 <div>
@@ -160,8 +178,8 @@ class App extends React.Component<{}, State> {
           />
           <Table.Column
             title="Players"
-            width={80}
-            sorter={(a: TGame, b: TGame) => a.mod.length - b.mod.length}
+            width={90}
+            sorter={(a: TGame, b: TGame) => a.players - b.players}
             render={(text: any, record: TGame) => (
               <div>
                 {record.players} / {record.maxplayers}
