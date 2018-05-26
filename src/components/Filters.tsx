@@ -9,6 +9,7 @@ import Checkbox from "antd/lib/checkbox";
 import { Data } from "../data/Data";
 import { TFilter } from "../types/TFilter";
 import { AdvancedFilters } from "./AdvancedFilters";
+import { RefreshButton } from "./RefreshButton";
 
 type Props = TFilter & {
   onFilterChange: <F extends keyof TFilter>(filter: F, value: TFilter[F]) => void;
@@ -33,14 +34,14 @@ export class Filters extends React.Component<Props, State> {
     const { props, state } = this;
     return (
       <div className={"filters"}>
-        <Row>
+        <Row style={{ alignItems: "center" }}>
           <label>Show:</label>
           <div>
             <Checkbox checked={props.showPlaying} onChange={e => props.onFilterChange("showPlaying", e.target.checked)}>
-              Playing
+              <span style={{ color: "green" }}>Playing</span>
             </Checkbox>
             <Checkbox checked={props.showWaiting} onChange={e => props.onFilterChange("showWaiting", e.target.checked)}>
-              Waiting
+              <span style={{ color: "orange" }}>Waiting</span>
             </Checkbox>
             <Checkbox checked={props.showEmpty} onChange={e => props.onFilterChange("showEmpty", e.target.checked)}>
               Empty
@@ -53,7 +54,7 @@ export class Filters extends React.Component<Props, State> {
             </Checkbox>
           </div>
         </Row>
-        <Row>
+        <Row style={{ alignItems: "center" }}>
           <label>Mods:</label>
           <div>
             <Select
@@ -73,17 +74,21 @@ export class Filters extends React.Component<Props, State> {
             </Select>
           </div>
         </Row>
+        <Row>
+          <Input.Search
+            placeholder="Search for a game..."
+            value={props.search}
+            onChange={e => props.onFilterChange("search", e.target.value)}
+            className={"searchname"}
+          />
+        </Row>
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div>
             <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
               <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
             </a>
           </div>
-          <div>
-            <a href="#" onClick={props.onRefresh}>
-              <i className={`fa ${props.isLoading ? "fa-spin" : ""} fa-refresh`} /> Refresh
-            </a>
-          </div>
+          <RefreshButton isLoading={props.isLoading} onRefresh={props.onRefresh} />
         </div>
         {state.showAdvancedFilters ? (
           <AdvancedFilters
@@ -93,14 +98,6 @@ export class Filters extends React.Component<Props, State> {
             players={props.players}
           />
         ) : null}
-        <Row>
-          <Input.Search
-            placeholder="Search for a game..."
-            value={props.search}
-            onChange={e => props.onFilterChange("search", e.target.value)}
-            className={"searchname"}
-          />
-        </Row>
       </div>
     );
   }

@@ -21,8 +21,8 @@ export class AdvancedFilters extends React.Component<Props> {
   render() {
     const { props } = this;
     return (
-      <div>
-        <Row>
+      <div style={{ padding: "10px" }}>
+        <Row style={{ alignItems: "center" }}>
           <label>Players:</label>
           <div>
             <Slider
@@ -42,7 +42,7 @@ export class AdvancedFilters extends React.Component<Props> {
             />
           </div>
         </Row>
-        <Row>
+        <Row style={{ alignItems: "center" }}>
           <label>Version:</label>
           <div>
             <Select
@@ -50,7 +50,7 @@ export class AdvancedFilters extends React.Component<Props> {
               onChange={value => props.onFilterChange("version", value as string)}
               filterOption={(input, option) => fuzzy(option.props.children!.toString().toLowerCase(), input)}
               style={{ minWidth: 130 }}
-              getPopupContainer={(target) => target as HTMLElement}
+              getPopupContainer={target => target as HTMLElement}
             >
               <Select.Option key={"-- ALL --"} value={"-- ALL --"}>
                 -- ALL --

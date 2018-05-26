@@ -10,6 +10,7 @@ type Props = {
 };
 
 type State = {
+  isLoading: boolean;
   mapInfo: TMap | null;
 };
 
@@ -18,6 +19,7 @@ export class Map extends React.Component<Props, State> {
     super(props);
     this.canvasRef = React.createRef<HTMLCanvasElement>();
     this.state = {
+      isLoading: true,
       mapInfo: null
     };
   }
@@ -38,7 +40,9 @@ export class Map extends React.Component<Props, State> {
       const minimap = new Image();
       minimap.src = `data:image/jpeg;base64,${mapInfo.minimap}`;
       minimap.onload = () => {
-        ctx!.drawImage(minimap, 0, 0);
+        const bounds = mapInfo.bounds.split(",").map(pos => parseInt(pos));
+        ctx!.drawImage(minimap, bounds[0], bounds[1]);
+
         this.props.clients.forEach(client => {
           ctx!.fillStyle = `#${client.color}`;
           ctx!.strokeStyle = "white";
@@ -52,7 +56,8 @@ export class Map extends React.Component<Props, State> {
           ctx!.strokeRect(x - 4, y - 4, 8, 8);
         });
         this.setState({
-          mapInfo: mapInfo
+          mapInfo: mapInfo,
+          isLoading: false
         });
       };
     }
@@ -61,12 +66,20 @@ export class Map extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     return (
-      <div>
-        <canvas ref={this.canvasRef} id={props.id} />
-        <div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ textAlign: "center" }}>
           {state.mapInfo ? (
-            <a href={"https://resource.openra.net/maps/" + state.mapInfo.id}>
+            <a href={"https://resource.openra.net/maps/" + state.mapInfo.id} target="_blank">
               {state.mapInfo.title} <i className="fa fa-external-link" />
+            </a>
+          ) : null}
+        </div>
+        <canvas ref={this.canvasRef} id={props.id} />
+        {state.isLoading ? <i className="fa fa-2x fa-spin fa-refresh" /> : null}
+        <div style={{ textAlign: "center" }}>
+          {state.mapInfo ? (
+            <a href={state.mapInfo.url} style={{ color: "white" }}>
+              Download <i className="fa fa-download" />
             </a>
           ) : null}
         </div>

@@ -168,6 +168,7 @@ class App extends React.Component<{}, State> {
           isLoading={this.state.isLoading}
         />
         <Table
+          rowKey="id"
           dataSource={this.state.filteredGames}
           size={"small"}
           expandedRowRender={(record: TGame) => (
@@ -184,6 +185,7 @@ class App extends React.Component<{}, State> {
           className={"games"}
         >
           <Table.Column
+            key="mod"
             title="Mod"
             dataIndex="mod"
             width={50}
@@ -194,9 +196,15 @@ class App extends React.Component<{}, State> {
                   <div>
                     <div>
                       <b>Version:</b> {record.version}
+                      {record.version === state.versions[0] ? (
+                        <span style={{ color: "green" }}>[Latest]</span>
+                      ) : null}{" "}
                     </div>
                     <div>
                       <b>Address:</b> {record.address}
+                    </div>
+                    <div>
+                      <b>Location:</b> {record.location ? record.location : "Unknown"}
                     </div>
                   </div>
                 }
@@ -208,6 +216,7 @@ class App extends React.Component<{}, State> {
             )}
           />
           <Table.Column
+            key="name"
             title="Name"
             sorter={(a: TGame, b: TGame) => {
               const aName = a.name.toLowerCase();
@@ -228,7 +237,13 @@ class App extends React.Component<{}, State> {
                       <i className="fa fa-lock" />
                     </Tooltip>
                   ) : null}{" "}
-                  <span style={{ color: record.state === 1 ? "inherit" : "green" }}>{record.name}</span>
+                  <span
+                    style={{
+                      color: record.state === 2 ? "green" : record.players > 0 ? "orange" : ""
+                    }}
+                  >
+                    {record.name}
+                  </span>
                 </div>
                 <div>
                   <small>{undefined}</small>
@@ -237,6 +252,7 @@ class App extends React.Component<{}, State> {
             )}
           />
           <Table.Column
+            key="players"
             title="Players"
             width={90}
             sorter={(a: TGame, b: TGame) => a.players - b.players}
@@ -246,14 +262,19 @@ class App extends React.Component<{}, State> {
               </div>
             )}
           />
-          <Table.Column width={100} render={(text: any, record: TGame) => <ClientLabel game={record} />} />
           <Table.Column
+            key="clients"
+            width={100}
+            render={(text: any, record: TGame) => <ClientLabel game={record} />}
+          />
+          <Table.Column
+            key="addons"
             width={100}
             render={(text: any, record: TGame) => (
               <div style={{ textAlign: "right" }}>
                 {// Don't show Join button on running games, neither on full servers
                 record.state === 1 && record.players !== record.maxplayers ? (
-                  <Button type="ghost" href={`openra-ra-release-20180307://${record.address}`} size="small">
+                  <Button type="ghost" href={`openra-ra-${record.version}://${record.address}`} size="small">
                     Join
                   </Button>
                 ) : null}
@@ -261,6 +282,13 @@ class App extends React.Component<{}, State> {
             )}
           />
         </Table>
+        {state.filteredGames.length > 0 ? (
+          <div style={{ textAlign: "center", color: "grey" }}>
+            <small>
+              Games {state.filteredGames.length} / {state.games.length}
+            </small>
+          </div>
+        ) : null}
       </Layout>
     );
   }

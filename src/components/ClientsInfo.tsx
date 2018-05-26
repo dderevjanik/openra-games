@@ -10,7 +10,7 @@ type Props = {
 
 const Team = (props: { mod: string; team: string; members: TGame["clients"] }) => (
   <div style={{ padding: "2px" }}>
-    <div style={{ textAlign: "left" }}>{props.team === "0" ? "No Team" : "Team"}</div>
+    <div style={{ textAlign: "left" }}>{props.team === "0" ? "No Team" : "Team " + props.team}</div>
     {props.members.map(member => (
       <div>
         <img src={`icons/${props.mod}_${member.faction.toLowerCase()}.png`} />{" "}
