@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import Row from "antd/lib/row";
+import Col from "antd/lib/col";
 import Select from "antd/lib/select";
 import Input from "antd/lib/input";
 import Checkbox from "antd/lib/checkbox";
@@ -11,7 +12,9 @@ import { AdvancedFilters } from "./AdvancedFilters";
 
 type Props = TFilter & {
   onFilterChange: <F extends keyof TFilter>(filter: F, value: TFilter[F]) => void;
+  isLoading: boolean;
   versions: string[];
+  onRefresh: () => void;
 };
 
 type State = {
@@ -39,8 +42,14 @@ export class Filters extends React.Component<Props, State> {
             <Checkbox checked={props.showWaiting} onChange={e => props.onFilterChange("showWaiting", e.target.checked)}>
               Waiting
             </Checkbox>
-            <Checkbox checked={props.locked} onChange={e => props.onFilterChange("locked", e.target.checked)}>
-              Locked
+            <Checkbox checked={props.showEmpty} onChange={e => props.onFilterChange("showEmpty", e.target.checked)}>
+              Empty
+            </Checkbox>
+            <Checkbox
+              checked={props.showProtected}
+              onChange={e => props.onFilterChange("showProtected", e.target.checked)}
+            >
+              Protected
             </Checkbox>
           </div>
         </Row>
@@ -54,7 +63,7 @@ export class Filters extends React.Component<Props, State> {
               onChange={values => props.onFilterChange("games", values as string[])}
               style={{ minWidth: 200 }}
               className={"tags"}
-              getPopupContainer={(target) => target as HTMLElement}
+              getPopupContainer={target => target as HTMLElement}
             >
               {Data.mods.map((mod, index) => (
                 <Select.Option key={index} value={mod.mod}>
@@ -64,11 +73,18 @@ export class Filters extends React.Component<Props, State> {
             </Select>
           </div>
         </Row>
-        <Row>
-          <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
-            <i className="fa fa-filter" /> Show advanced filters
-          </a>
-        </Row>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <div>
+            <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
+              <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
+            </a>
+          </div>
+          <div>
+            <a href="#" onClick={props.onRefresh}>
+              <i className={`fa ${props.isLoading ? "fa-spin" : ""} fa-refresh`} /> Refresh
+            </a>
+          </div>
+        </div>
         {state.showAdvancedFilters ? (
           <AdvancedFilters
             onFilterChange={props.onFilterChange}

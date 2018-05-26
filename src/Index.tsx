@@ -24,10 +24,12 @@ import { version } from "moment";
 import "./styles/main.less";
 import { ClientsInfo } from "./components/ClientsInfo";
 import { ClientLabel } from "./components/ClientLabel";
+import { EGameState } from "./types/EGameState";
 
 type State = {
   games: TGame[];
   maps: TMap[];
+  isLoading: boolean;
   pagination: {
     current: number;
     total: number;
@@ -45,12 +47,14 @@ class App extends React.Component<{}, State> {
       maps: [],
       filteredGames: [],
       versions: [],
+      isLoading: true,
       pagination: {
         current: 1,
         total: 1
       },
       filters: {
-        locked: true,
+        showEmpty: true,
+        showProtected: true,
         games: ["ra", "cnc"],
         players: [0, 10],
         search: "",
@@ -64,12 +68,30 @@ class App extends React.Component<{}, State> {
   filterGames(games: TGame[], filters: TFilter) {
     const searchWord = filters.search.toLowerCase();
     const versioned = filters.version === "-- ALL --" ? games : games.filter(g => g.version === filters.version);
-    const filtered = versioned
+    const basicFiltered = versioned
       .filter(g => filters.games.includes(g.mod))
       .filter(g => g.players >= filters.players[0] && g.players <= filters.players[1])
-      .filter(g => (filters.locked ? true : g.protected === false))
-      .filter(g => (filters.showPlaying ? true : g.state === 1))
-      .filter(g => (filters.showWaiting ? true : g.state === 2));
+      .filter(g => (filters.showProtected ? true : g.protected === false));
+
+    let filtered: TGame[] = basicFiltered;
+    if (!filters.showEmpty && !filters.showWaiting) {
+      // Don't show Empty and Waiting games
+      // -> Remove all NOTPLAYING games
+      filtered = basicFiltered.filter(g => g.state === EGameState.PLAYING);
+    } else if (!filters.showEmpty) {
+      // Show Waiting Games
+      // -> Get games with at least 1 client
+      filtered = basicFiltered.filter(g => g.clients.length > 0);
+      console.log(filtered);
+    } else if (!filters.showWaiting) {
+      // Show Empty Games
+      // -> Get games with NO clients OR those who are Playing
+      filtered = basicFiltered.filter(
+        g => (g.clients.length === 0 && g.state === EGameState.NOTPLAYING) || g.state === EGameState.PLAYING
+      );
+    }
+    filtered = filtered.filter(g => (filters.showPlaying ? true : g.state === EGameState.NOTPLAYING));
+
     const found = filters.search.length < 3 ? filtered : filtered.filter(g => Fuzzy(searchWord, g.name.toLowerCase()));
     const pages = Math.ceil(parseInt((found.length / 10).toFixed(1)));
     console.log(pages);
@@ -90,12 +112,33 @@ class App extends React.Component<{}, State> {
     };
     const filteredGames = this.filterGames(games, updatedFilter);
     this.setState({
+      isLoading: false,
       games,
       ...filteredGames,
       versions: versions.known_versions,
       filters: updatedFilter
     });
   }
+
+  updateGames = async () => {
+    // Make sure that there is no update in progress
+    if (!this.state.isLoading) {
+      this.setState(
+        {
+          isLoading: true
+        },
+        async () => {
+          const games = await fetchGames();
+          const filteredGames = this.filterGames(games, this.state.filters);
+          this.setState({
+            isLoading: false,
+            games,
+            ...filteredGames
+          });
+        }
+      );
+    }
+  };
 
   onFilterChange = <F extends keyof TFilter>(filter: F, newValue: TFilter[F]) => {
     const filters = {
@@ -113,7 +156,13 @@ class App extends React.Component<{}, State> {
     const { props, state } = this;
     return (
       <Layout>
-        <Filters {...this.state.filters} onFilterChange={this.onFilterChange} versions={this.state.versions} />
+        <Filters
+          {...this.state.filters}
+          onFilterChange={this.onFilterChange}
+          versions={this.state.versions}
+          onRefresh={this.updateGames}
+          isLoading={this.state.isLoading}
+        />
         <Table
           dataSource={this.state.filteredGames}
           size={"small"}
@@ -133,29 +182,36 @@ class App extends React.Component<{}, State> {
           <Table.Column
             title="Mod"
             dataIndex="mod"
-            width={70}
-            sorter={(a: TGame, b: TGame) => {
-              if (a.mod < b.mod) {
-                return -1;
-              }
-              if (a.mod > b.mod) {
-                return 1;
-              }
-              return 0;
-            }}
+            width={50}
             render={(text: any, record: TGame) => (
-              <div>
-                <img src={`icons/${record.mod}.png`} height={24} />
-              </div>
+              <Tooltip
+                getPopupContainer={target => target as HTMLElement}
+                title={
+                  <div>
+                    <div>
+                      <b>Version:</b> {record.version}
+                    </div>
+                    <div>
+                      <b>Address:</b> {record.address}
+                    </div>
+                  </div>
+                }
+              >
+                <div>
+                  <img src={`icons/${record.mod}.png`} height={24} />
+                </div>
+              </Tooltip>
             )}
           />
           <Table.Column
             title="Name"
             sorter={(a: TGame, b: TGame) => {
-              if (a.name < b.name) {
+              const aName = a.name.toLowerCase();
+              const bName = b.name.toLowerCase();
+              if (aName < bName) {
                 return -1;
               }
-              if (a.name > b.name) {
+              if (aName > bName) {
                 return 1;
               }
               return 0;
@@ -164,7 +220,7 @@ class App extends React.Component<{}, State> {
               <div>
                 <div>
                   {record.protected ? (
-                    <Tooltip title={"Game is password protected"}>
+                    <Tooltip title={"Game is password protected"} getPopupContainer={target => target as HTMLElement}>
                       <i className="fa fa-lock" />
                     </Tooltip>
                   ) : null}{" "}

@@ -14,3 +14,12 @@ IMO the map uid there is just clutter
 it doesn't convey any meaningful info to a human viewer
 assuming thats what the hash below the title is
 you can save probably 1/3 of your vertical height by removing that then reducing the row height
+
+as from the design standpoint - I'd like less spaced rows, darker lines between rows (or maybe just 2 interchanging colors for rows)
+and less outstanding features overall (expand button and players indicator borders darker than white)
+
+also, you can show version on the "Mod" icon popup
+
+waiting/empty/protected/started
+
+also, when you expand a server, I don't think you need a hline between its name and the expanded info

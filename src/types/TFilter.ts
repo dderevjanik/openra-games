@@ -5,5 +5,6 @@ export type TFilter = {
   showWaiting: boolean;
   showPlaying: boolean;
   search: string;
-  locked: boolean;
+  showProtected: boolean;
+  showEmpty: boolean;
 };
