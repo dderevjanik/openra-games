@@ -74,23 +74,27 @@ class App extends React.Component<{}, State> {
       .filter(g => (filters.showProtected ? true : g.protected === false));
 
     let filtered: TGame[] = basicFiltered;
-    if (!filters.showEmpty && !filters.showWaiting) {
-      // Don't show Empty and Waiting games
-      // -> Remove all NOTPLAYING games
-      filtered = basicFiltered.filter(g => g.state === EGameState.PLAYING);
-    } else if (!filters.showEmpty) {
-      // Show Waiting Games
-      // -> Get games with at least 1 client
-      filtered = basicFiltered.filter(g => g.clients.length > 0);
-      console.log(filtered);
-    } else if (!filters.showWaiting) {
-      // Show Empty Games
-      // -> Get games with NO clients OR those who are Playing
-      filtered = basicFiltered.filter(
-        g => (g.clients.length === 0 && g.state === EGameState.NOTPLAYING) || g.state === EGameState.PLAYING
-      );
+    if (!filters.showEmpty && !filters.showWaiting && !filters.showPlaying) {
+      // Show nothing means show *everything*, so use only basic filtering
+    } else {
+      if (!filters.showEmpty && !filters.showWaiting) {
+        // Don't show Empty and Waiting games
+        // -> Remove all NOTPLAYING games
+        filtered = basicFiltered.filter(g => g.state === EGameState.PLAYING);
+      } else if (!filters.showEmpty) {
+        // Show Waiting Games
+        // -> Get games with at least 1 client
+        filtered = basicFiltered.filter(g => g.clients.length > 0);
+        console.log(filtered);
+      } else if (!filters.showWaiting) {
+        // Show Empty Games
+        // -> Get games with NO clients OR those who are Playing
+        filtered = basicFiltered.filter(
+          g => (g.clients.length === 0 && g.state === EGameState.NOTPLAYING) || g.state === EGameState.PLAYING
+        );
+      }
+      filtered = filtered.filter(g => (filters.showPlaying ? true : g.state === EGameState.NOTPLAYING));
     }
-    filtered = filtered.filter(g => (filters.showPlaying ? true : g.state === EGameState.NOTPLAYING));
 
     const found = filters.search.length < 3 ? filtered : filtered.filter(g => Fuzzy(searchWord, g.name.toLowerCase()));
     const pages = Math.ceil(parseInt((found.length / 10).toFixed(1)));
@@ -246,10 +250,10 @@ class App extends React.Component<{}, State> {
           <Table.Column
             width={100}
             render={(text: any, record: TGame) => (
-              <div>
+              <div style={{ textAlign: "right" }}>
                 {// Don't show Join button on running games, neither on full servers
                 record.state === 1 && record.players !== record.maxplayers ? (
-                  <Button type="ghost" href={`openra-ra-release-20180307://${record.address}`}>
+                  <Button type="ghost" href={`openra-ra-release-20180307://${record.address}`} size="small">
                     Join
                   </Button>
                 ) : null}
