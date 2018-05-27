@@ -1,4 +1,4 @@
-export type TGame = {
+export type TGame = Readonly<{
   /**
    * IP Address
    */
@@ -29,4 +29,4 @@ export type TGame = {
   state: number;
   ttl: number;
   version: string;
-};
+}>;

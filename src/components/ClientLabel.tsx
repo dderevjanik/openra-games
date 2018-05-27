@@ -8,40 +8,42 @@ type Props = {
   game: TGame;
 };
 
-export class ClientLabel extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
+export const ClientLabel = (props: Props) => {
+  if (props.game.clients.length === 0) {
+    return null;
   }
-
-  render() {
-    const { props } = this;
-    if (props.game.clients.length === 0) {
-      return null;
-    }
-    return (
-      <Tooltip title={<ClientsInfo clients={props.game.clients} mod={props.game.mod} orientation={"vertical"} />}
-               getPopupContainer={(target) => target as HTMLElement}>
-        <Tag>
-          {props.game.players > 0 ? (
-            <span>
-              <i className="fa fa-user" />
-              {" " + props.game.players + " "}
-            </span>
-          ) : null}
-          {props.game.bots > 0 ? (
-            <span>
-              <i className="fa fa-desktop" />
-              {" " + props.game.bots + " "}
-            </span>
-          ) : null}
-          {props.game.spectators > 0 ? (
-            <span>
-              <i className="fa fa-eye" />
-              {" " + props.game.spectators + " "}
-            </span>
-          ) : null}
-        </Tag>
-      </Tooltip>
-    );
-  }
-}
+  return (
+    <Tooltip
+      title={
+        <ClientsInfo
+          clients={props.game.clients}
+          mod={props.game.mod}
+          orientation={"vertical"}
+          showSpawnpoints={false}
+        />
+      }
+      getPopupContainer={target => target as HTMLElement}
+    >
+      <Tag>
+        {props.game.players > 0 ? (
+          <span>
+            <i className="fa fa-user" />
+            {" " + props.game.players + " "}
+          </span>
+        ) : null}
+        {props.game.bots > 0 ? (
+          <span>
+            <i className="fa fa-desktop" />
+            {" " + props.game.bots + " "}
+          </span>
+        ) : null}
+        {props.game.spectators > 0 ? (
+          <span>
+            <i className="fa fa-eye" />
+            {" " + props.game.spectators + " "}
+          </span>
+        ) : null}
+      </Tag>
+    </Tooltip>
+  );
+};

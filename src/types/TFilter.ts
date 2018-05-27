@@ -1,4 +1,4 @@
-export type TFilter = {
+export type TFilter = Readonly<{
   version: string;
   players: [number, number];
   games: string[];
@@ -7,4 +7,4 @@ export type TFilter = {
   search: string;
   showProtected: boolean;
   showEmpty: boolean;
-};
+}>;

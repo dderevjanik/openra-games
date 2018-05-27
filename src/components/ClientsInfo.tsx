@@ -6,40 +6,46 @@ type Props = {
   mod: string;
   clients: TGame["clients"];
   orientation: "horizontal" | "vertical";
+  showSpawnpoints: boolean;
 };
 
-const Team = (props: { mod: string; team: string; members: TGame["clients"] }) => (
+const Team = (props: { mod: string; team: string; members: TGame["clients"]; showSpawnpoints: boolean }) => (
   <div style={{ padding: "2px" }}>
     <div style={{ textAlign: "left" }}>{props.team === "0" ? "No Team" : "Team " + props.team}</div>
-    {props.members.map(member => (
-      <div>
+    {props.members.map((member, index) => (
+      <div key={member.name + index}>
         <img src={`icons/${props.mod}_${member.faction.toLowerCase()}.png`} />{" "}
-        {member.isadmin ? <i className="fa fa-star" /> : null} {member.isbot ? <i className="fa fa-desktop" /> : null}{" "}
         {member.isspectator ? <i className="fa fa-eye" /> : null}
+        {member.isbot ? <i className="fa fa-desktop" /> : null}{" "}
+        {props.showSpawnpoints ? (member.spawnpoint === 0 ? "(?)" : `(${member.spawnpoint})`) : ""}
+        {member.isadmin ? <i className="fa fa-star" /> : null}
         <span
           style={{
             color: "#" + member.color,
             textShadow: "1px 1px 0 rgba(255, 255, 255, 0.4)"
           }}
         >
-          {" " + member.name}
+          {" " + member.name + " "}
         </span>
       </div>
     ))}
   </div>
 );
 
-export class ClientsInfo extends React.Component<Props, {}> {
-  render() {
-    const { clients, mod, orientation } = this.props;
-    const teams = groupBy(clients, "team");
-    return (
-      <div
-        style={{ display: "flex", flexDirection: orientation === "horizontal" ? "row" : "column" }}
-        className={"players"}
-      >
-        {Object.keys(teams).map(key => <Team key={key} mod={mod} team={key} members={teams[key]} />)}
-      </div>
-    );
-  }
-}
+export const ClientsInfo = (props: Props) => {
+  const teams = groupBy(props.clients, "team");
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: props.orientation === "horizontal" ? "row" : "column",
+        flexWrap: "wrap"
+      }}
+      className={"players"}
+    >
+      {Object.keys(teams).map(team => (
+        <Team key={team} mod={props.mod} team={team} members={teams[team]} showSpawnpoints={props.showSpawnpoints} />
+      ))}
+    </div>
+  );
+};

@@ -1,4 +1,4 @@
-export type TMap = {
+export type TMap = Readonly<{
   description: string;
   url: string;
   /**
@@ -45,4 +45,4 @@ export type TMap = {
   game_mod: string; // TODO: add icons
   map_hash: string;
   height: string;
-};
+}>;

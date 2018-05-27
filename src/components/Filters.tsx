@@ -1,12 +1,9 @@
 import * as React from "react";
 
 import Row from "antd/lib/row";
-import Col from "antd/lib/col";
-import Select from "antd/lib/select";
 import Input from "antd/lib/input";
 import Checkbox from "antd/lib/checkbox";
 
-import { Data } from "../data/Data";
 import { TFilter } from "../types/TFilter";
 import { AdvancedFilters } from "./AdvancedFilters";
 import { RefreshButton } from "./RefreshButton";
@@ -54,26 +51,7 @@ export class Filters extends React.Component<Props, State> {
             </Checkbox>
           </div>
         </Row>
-        <Row style={{ alignItems: "center" }}>
-          <label>Mods:</label>
-          <div>
-            <Select
-              mode="tags"
-              value={props.games}
-              tokenSeparators={[","]}
-              onChange={values => props.onFilterChange("games", values as string[])}
-              style={{ minWidth: 200 }}
-              className={"tags"}
-              getPopupContainer={target => target as HTMLElement}
-            >
-              {Data.mods.map((mod, index) => (
-                <Select.Option key={index} value={mod.mod}>
-                  <img width="16" height="16" alt={mod.name} src={`icons/${mod.icon}`} /> {mod.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </div>
-        </Row>
+
         <Row>
           <Input.Search
             placeholder="Search for a game..."
@@ -83,12 +61,14 @@ export class Filters extends React.Component<Props, State> {
           />
         </Row>
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <div>
+          <div style={{ background: state.showAdvancedFilters ? "rgba(39, 45, 44, 0.5)" : "", padding: "4px 10px" }}>
             <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
               <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
             </a>
           </div>
-          <RefreshButton isLoading={props.isLoading} onRefresh={props.onRefresh} />
+          <div style={{ padding: "4px 10px" }}>
+            <RefreshButton isLoading={props.isLoading} onRefresh={props.onRefresh} />
+          </div>
         </div>
         {state.showAdvancedFilters ? (
           <AdvancedFilters
@@ -96,6 +76,7 @@ export class Filters extends React.Component<Props, State> {
             versions={props.versions}
             version={props.version}
             players={props.players}
+            games={props.games}
           />
         ) : null}
       </div>

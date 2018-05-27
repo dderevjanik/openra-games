@@ -11,7 +11,7 @@ type State = {
   seconds: number;
 };
 
-export class RefreshButton extends React.Component<Props, State> {
+export class RefreshButton extends React.PureComponent<Props, State> {
   interval: any;
 
   constructor(props: Props) {
@@ -21,39 +21,37 @@ export class RefreshButton extends React.Component<Props, State> {
     };
   }
 
-  tick() {
-    // Don't update timer on loading
+  tick = (): void => {
+    // Don't update timer while isLoading
     if (!this.props.isLoading) {
-      this.setState(prevState => {
-        const next = prevState.seconds + 1;
-        if (next === REFRESH_TIME) {
-          this.props.onRefresh();
-          this.setState({
-            seconds: 0
-          });
-        } else {
-          return {
-            seconds: prevState.seconds + 1
-          };
-        }
-      });
+      const next = this.state.seconds + 1;
+      if (next === REFRESH_TIME) {
+        this.props.onRefresh();
+        this.setState({
+          seconds: 0
+        });
+      } else {
+        this.setState({
+          seconds: next
+        });
+      }
     }
-  }
+  };
 
-  onRefreshHit = () => {
+  onRefreshHit = (): void => {
     this.props.onRefresh();
     this.setState({
       seconds: 0
     });
   };
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     this.interval = setInterval(() => {
       this.tick();
     }, 1000);
   }
 
-  async componentWillUnmount() {
+  async componentWillUnmount(): Promise<void> {
     clearInterval(this.interval);
   }
 

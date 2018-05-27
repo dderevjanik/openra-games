@@ -23,3 +23,12 @@ also, you can show version on the "Mod" icon popup
 waiting/empty/protected/started
 
 also, when you expand a server, I don't think you need a hline between its name and the expanded info
+
+
+hm, is it possible to expand the info about the server when you just click at the title/background?
+also not sure if we need a link to the map and a download link. doesn't really hurt though (maybe only increases size)
+(maybe just putting the download icon next to the map name might work)
+
+agreed on both points actually
+also, popup needs a bit more opacity
+if you popup a player list over expanded server with another playerlist, it gets messed up

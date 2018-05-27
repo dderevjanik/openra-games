@@ -2,29 +2,28 @@ import * as React from "react";
 import Fuzzy from "fuzzysearch";
 import { render } from "react-dom";
 import { TGame } from "./types/TGame";
-import chunk from "lodash.chunk";
 import { Map } from "./components/Map";
-import { fetchGames, fetchOpenRAVersions, fetchMaps, fetchMap } from "./Apiz";
+import { fetchGames, fetchOpenRAVersions } from "./Apiz";
 // import {  Table, Tooltip, Pagination } from "antd";
 
 import Layout from "antd/lib/layout";
 import Table from "antd/lib/table";
 import Tooltip from "antd/lib/tooltip";
-import Pagination from "antd/lib/pagination";
-import Tag from "antd/lib/tag";
 import Row from "antd/lib/row";
 import Col from "antd/lib/col";
-import Button from "antd/lib/button";
 
-import { Data } from "./data/Data";
 import { TFilter } from "./types/TFilter";
 import { Filters } from "./components/Filters";
 import { TMap } from "./types/TMap";
-import { version } from "moment";
 import "./styles/main.less";
 import { ClientsInfo } from "./components/ClientsInfo";
 import { ClientLabel } from "./components/ClientLabel";
 import { EGameState } from "./types/EGameState";
+import { GamesCounter } from "./components/GamesCounter";
+import { JoinButton } from "./components/JoinButton";
+import { GameInfo } from "./components/GameInfo";
+import { alphabeticalSorter } from "./utils/Sorters";
+import { isJoinable } from "./utils/Predicates";
 
 type State = {
   games: TGame[];
@@ -79,13 +78,12 @@ class App extends React.Component<{}, State> {
     } else {
       if (!filters.showEmpty && !filters.showWaiting) {
         // Don't show Empty and Waiting games
-        // -> Remove all NOTPLAYING games
+        // -> get all PLAYING games
         filtered = basicFiltered.filter(g => g.state === EGameState.PLAYING);
       } else if (!filters.showEmpty) {
         // Show Waiting Games
         // -> Get games with at least 1 client
         filtered = basicFiltered.filter(g => g.clients.length > 0);
-        console.log(filtered);
       } else if (!filters.showWaiting) {
         // Show Empty Games
         // -> Get games with NO clients OR those who are Playing
@@ -96,9 +94,9 @@ class App extends React.Component<{}, State> {
       filtered = filtered.filter(g => (filters.showPlaying ? true : g.state === EGameState.NOTPLAYING));
     }
 
+    // TODO: Throttle search function
     const found = filters.search.length < 3 ? filtered : filtered.filter(g => Fuzzy(searchWord, g.name.toLowerCase()));
     const pages = Math.ceil(parseInt((found.length / 10).toFixed(1)));
-    console.log(pages);
     return {
       pagination: {
         current: 1, // TODO: last page
@@ -131,8 +129,10 @@ class App extends React.Component<{}, State> {
         {
           isLoading: true
         },
+        // After setting loading state, we can start fetching games list
         async () => {
           const games = await fetchGames();
+          // Filter list after a fetch
           const filteredGames = this.filterGames(games, this.state.filters);
           this.setState({
             isLoading: false,
@@ -144,10 +144,10 @@ class App extends React.Component<{}, State> {
     }
   };
 
-  onFilterChange = <F extends keyof TFilter>(filter: F, newValue: TFilter[F]) => {
+  onFilterChange = <F extends keyof TFilter>(filterName: F, newValue: TFilter[F]) => {
     const filters = {
       ...this.state.filters,
-      [filter]: newValue
+      [filterName]: newValue // Update specific filter
     };
     const filteredGames = this.filterGames(this.state.games, filters);
     this.setState({
@@ -157,7 +157,7 @@ class App extends React.Component<{}, State> {
   };
 
   render() {
-    const { props, state } = this;
+    const { state } = this;
     return (
       <Layout>
         <Filters
@@ -177,7 +177,12 @@ class App extends React.Component<{}, State> {
                 <Map id={record.id.toString()} hash={record.map} clients={record.clients} />
               </Col>
               <Col span={16}>
-                <ClientsInfo mod={record.mod} clients={record.clients} orientation={"horizontal"} />
+                <ClientsInfo
+                  mod={record.mod}
+                  clients={record.clients}
+                  orientation={"horizontal"}
+                  showSpawnpoints={true}
+                />
               </Col>
             </Row>
           )}
@@ -189,24 +194,16 @@ class App extends React.Component<{}, State> {
             title="Mod"
             dataIndex="mod"
             width={50}
-            render={(text: any, record: TGame) => (
+            render={(_, record: TGame) => (
               <Tooltip
                 getPopupContainer={target => target as HTMLElement}
                 title={
-                  <div>
-                    <div>
-                      <b>Version:</b> {record.version}
-                      {record.version === state.versions[0] ? (
-                        <span style={{ color: "green" }}>[Latest]</span>
-                      ) : null}{" "}
-                    </div>
-                    <div>
-                      <b>Address:</b> {record.address}
-                    </div>
-                    <div>
-                      <b>Location:</b> {record.location ? record.location : "Unknown"}
-                    </div>
-                  </div>
+                  <GameInfo
+                    allVersions={state.versions}
+                    address={record.address}
+                    gameVersion={record.version}
+                    location={record.location}
+                  />
                 }
               >
                 <div>
@@ -218,18 +215,8 @@ class App extends React.Component<{}, State> {
           <Table.Column
             key="name"
             title="Name"
-            sorter={(a: TGame, b: TGame) => {
-              const aName = a.name.toLowerCase();
-              const bName = b.name.toLowerCase();
-              if (aName < bName) {
-                return -1;
-              }
-              if (aName > bName) {
-                return 1;
-              }
-              return 0;
-            }}
-            render={(text: any, record: TGame) => (
+            sorter={alphabeticalSorter}
+            render={(_, record: TGame) => (
               <div>
                 <div>
                   {record.protected ? (
@@ -253,41 +240,30 @@ class App extends React.Component<{}, State> {
           />
           <Table.Column
             key="players"
-            title="Players"
+            title={<i className="fa fa-users" />}
             width={90}
             sorter={(a: TGame, b: TGame) => a.players - b.players}
-            render={(text: any, record: TGame) => (
+            defaultSortOrder={"descend"}
+            render={(_, record: TGame) => (
               <div>
                 {record.players} / {record.maxplayers}
               </div>
             )}
           />
-          <Table.Column
-            key="clients"
-            width={100}
-            render={(text: any, record: TGame) => <ClientLabel game={record} />}
-          />
+          <Table.Column key="clients" width={100} render={(_, record: TGame) => <ClientLabel game={record} />} />
           <Table.Column
             key="addons"
             width={100}
-            render={(text: any, record: TGame) => (
+            render={(_, record: TGame) => (
               <div style={{ textAlign: "right" }}>
                 {// Don't show Join button on running games, neither on full servers
-                record.state === 1 && record.players !== record.maxplayers ? (
-                  <Button type="ghost" href={`openra-ra-${record.version}://${record.address}`} size="small">
-                    Join
-                  </Button>
-                ) : null}
+                isJoinable(record) ? <JoinButton address={record.address} version={record.version} /> : null}
               </div>
             )}
           />
         </Table>
         {state.filteredGames.length > 0 ? (
-          <div style={{ textAlign: "center", color: "grey" }}>
-            <small>
-              Games {state.filteredGames.length} / {state.games.length}
-            </small>
-          </div>
+          <GamesCounter current={state.filteredGames.length} total={state.games.length} />
         ) : null}
       </Layout>
     );

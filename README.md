@@ -1,6 +1,6 @@
 # OpenRA games browser
 
-Web: https://dderevjanik.github.io/openra-games/
+Demo: https://dderevjanik.github.io/openra-games/
 
 ## Development
 
@@ -11,6 +11,10 @@ npm i
 npm run dev
 ./docs/index.html
 ```
+
+## Technologies used
+
+Typescript 2.8, React 16.3, Atnd 3.5 and Webpack 4.8
 
 ### Building in production mode
 
