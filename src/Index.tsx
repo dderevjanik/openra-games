@@ -24,11 +24,14 @@ import { JoinButton } from "./components/JoinButton";
 import { GameInfo } from "./components/GameInfo";
 import { alphabeticalSorter } from "./utils/Sorters";
 import { isJoinable } from "./utils/Predicates";
+import { defaultFilters } from "./data/DefaultFilters";
+import { storage } from "./modules/LocalStorage";
 
 type State = {
   games: TGame[];
   maps: TMap[];
   isLoading: boolean;
+  filterHasChanged: boolean;
   pagination: {
     current: number;
     total: number;
@@ -36,11 +39,14 @@ type State = {
   filteredGames: TGame[];
   versions: string[];
   filters: TFilter;
+  expandedRows: number[];
 };
 
 class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
+    const filters = storage.get("version") === "0.0.1" ? storage.get("filter") : defaultFilters;
+    const filterHasChanged = storage.get("filterHasChanged")!;
     this.state = {
       games: [],
       maps: [],
@@ -51,18 +57,21 @@ class App extends React.Component<{}, State> {
         current: 1,
         total: 1
       },
-      filters: {
-        showEmpty: true,
-        showProtected: true,
-        games: ["ra", "cnc"],
-        players: [0, 10],
-        search: "",
-        showPlaying: false,
-        showWaiting: true,
-        version: "release-20180307" // Doesn't matter, will change right after it fetch versions list and will be replaced be newest one
-      }
+      filterHasChanged,
+      expandedRows: [],
+      filters
     };
   }
+
+  setDefaultFilters = () => {
+    const filtered = this.filterGames(this.state.games, defaultFilters);
+    storage.reset();
+    this.setState({
+      filters: defaultFilters,
+      filteredGames: filtered.filteredGames,
+      filterHasChanged: false
+    });
+  };
 
   filterGames(games: TGame[], filters: TFilter) {
     const searchWord = filters.search.toLowerCase();
@@ -149,11 +158,29 @@ class App extends React.Component<{}, State> {
       ...this.state.filters,
       [filterName]: newValue // Update specific filter
     };
+    storage.set("filter", filters);
+    storage.set("filterHasChanged", true);
     const filteredGames = this.filterGames(this.state.games, filters);
     this.setState({
       filters,
-      ...filteredGames
+      ...filteredGames,
+      filterHasChanged: true
     });
+  };
+
+  toggleExpandedRow = (key: number) => {
+    const isExpanded = this.state.expandedRows.includes(key);
+    if (isExpanded) {
+      // TODO: Optimize
+      const expandedRows = this.state.expandedRows.filter(k => k !== key);
+      this.setState({
+        expandedRows
+      });
+    } else {
+      this.setState({
+        expandedRows: [...this.state.expandedRows, key]
+      });
+    }
   };
 
   render() {
@@ -161,16 +188,20 @@ class App extends React.Component<{}, State> {
     return (
       <Layout>
         <Filters
-          {...this.state.filters}
+          {...state.filters}
           onFilterChange={this.onFilterChange}
-          versions={this.state.versions}
+          versions={state.versions}
           onRefresh={this.updateGames}
-          isLoading={this.state.isLoading}
+          isLoading={state.isLoading}
+          filterHasChanged={state.filterHasChanged}
+          onResetFilters={this.setDefaultFilters}
         />
         <Table
           rowKey="id"
           dataSource={this.state.filteredGames}
           size={"small"}
+          expandedRowKeys={this.state.expandedRows}
+          onExpandedRowsChange={keys => this.setState({ expandedRows: keys as number[] })}
           expandedRowRender={(record: TGame) => (
             <Row>
               <Col span={8}>
@@ -217,7 +248,7 @@ class App extends React.Component<{}, State> {
             title="Name"
             sorter={alphabeticalSorter}
             render={(_, record: TGame) => (
-              <div>
+              <div className="click-to-expand-row" onClick={() => this.toggleExpandedRow(record.id)}>
                 <div>
                   {record.protected ? (
                     <Tooltip title={"Game is password protected"} getPopupContainer={target => target as HTMLElement}>
@@ -232,9 +263,7 @@ class App extends React.Component<{}, State> {
                     {record.name}
                   </span>
                 </div>
-                <div>
-                  <small>{undefined}</small>
-                </div>
+                {/* <MapName mapHash={record.map} /> */}
               </div>
             )}
           />
@@ -257,7 +286,19 @@ class App extends React.Component<{}, State> {
             render={(_, record: TGame) => (
               <div style={{ textAlign: "right" }}>
                 {// Don't show Join button on running games, neither on full servers
-                isJoinable(record) ? <JoinButton address={record.address} version={record.version} /> : null}
+                isJoinable(record) ? (
+                  <JoinButton address={record.address} version={record.version} />
+                ) : record.state === 2 ? (
+                  <small style={{ color: "grey" }}>
+                    {record.playtime ? (
+                      <span>{(record.playtime / 60).toFixed(0)}m</span>
+                    ) : (
+                      <span>
+                        ? <i className="fa fa-clock" />
+                      </span>
+                    )}
+                  </small>
+                ) : null}
               </div>
             )}
           />

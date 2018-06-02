@@ -6,7 +6,7 @@ export type TGameData = {
   icon: string;
 };
 
-export const Data: { mods: TGameData[] } = {
+export const ModData: { mods: TGameData[] } = {
   mods: [
     { mod: "ra", name: "Red Alert", description: "", icon: "ra.png", color: "#650b03" },
     {

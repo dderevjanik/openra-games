@@ -1,4 +1,4 @@
-export type TGame = Readonly<{
+export type TGameBase = {
   /**
    * IP Address
    */
@@ -26,7 +26,19 @@ export type TGame = Readonly<{
   players: number;
   protected: boolean;
   spectators: number;
-  state: number;
   ttl: number;
   version: string;
-}>;
+};
+
+export type TGame =
+  | Readonly<
+      {
+        state: 2;
+        /**
+         * Date in format "YYYY-MM-DD"
+         */
+        started: string;
+        playtime: number;
+      } & TGameBase
+    >
+  | Readonly<{ state: 1 } & TGameBase>;

@@ -17,8 +17,12 @@ const Team = (props: { mod: string; team: string; members: TGame["clients"]; sho
         <img src={`icons/${props.mod}_${member.faction.toLowerCase()}.png`} />{" "}
         {member.isspectator ? <i className="fa fa-eye" /> : null}
         {member.isbot ? <i className="fa fa-desktop" /> : null}{" "}
-        {props.showSpawnpoints ? (member.spawnpoint === 0 ? "(?)" : `(${member.spawnpoint})`) : ""}
-        {member.isadmin ? <i className="fa fa-star" /> : null}
+        {props.showSpawnpoints && !member.isspectator
+          ? member.spawnpoint === 0
+            ? "(?)"
+            : `(${member.spawnpoint - 1})`
+          : ""}
+        {member.isadmin ? <i className="fa fa-user-cog" /> : null}
         <span
           style={{
             color: "#" + member.color,

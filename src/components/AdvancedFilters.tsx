@@ -6,7 +6,7 @@ import Slider from "antd/lib/slider";
 import Select from "antd/lib/select";
 import Col from "antd/lib/col";
 import { TFilter } from "../types/TFilter";
-import { Data } from "../data/Data";
+import { ModData } from "../data/ModData";
 
 type TAdvancedFilters = Pick<TFilter, "players"> & Pick<TFilter, "version"> & Pick<TFilter, "games">;
 
@@ -68,7 +68,7 @@ export const AdvancedFilters = (props: Props) => (
           className={"tags"}
           getPopupContainer={target => target as HTMLElement}
         >
-          {Data.mods.map((mod, index) => (
+          {ModData.mods.map((mod, index) => (
             <Select.Option key={index} value={mod.mod}>
               <img width="16" height="16" alt={mod.name} src={`icons/${mod.icon}`} />
               <span>{mod.name}</span>

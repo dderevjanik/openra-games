@@ -10,6 +10,8 @@ import { RefreshButton } from "./RefreshButton";
 
 type Props = TFilter & {
   onFilterChange: <F extends keyof TFilter>(filter: F, value: TFilter[F]) => void;
+  onResetFilters: () => void;
+  filterHasChanged: boolean;
   isLoading: boolean;
   versions: string[];
   onRefresh: () => void;
@@ -64,7 +66,12 @@ export class Filters extends React.Component<Props, State> {
           <div style={{ background: state.showAdvancedFilters ? "rgba(39, 45, 44, 0.5)" : "", padding: "4px 10px" }}>
             <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
               <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
-            </a>
+            </a>{" "}
+            {props.filterHasChanged ? (
+              <a href="#" onClick={props.onResetFilters}>
+                <i className="fa fa-times" /> Reset Filters
+              </a>
+            ) : null}
           </div>
           <div style={{ padding: "4px 10px" }}>
             <RefreshButton isLoading={props.isLoading} onRefresh={props.onRefresh} />

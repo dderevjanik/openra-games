@@ -61,7 +61,7 @@ export class RefreshButton extends React.PureComponent<Props, State> {
       <div>
         <div>
           <a className="no-focus" href="#" onClick={this.onRefreshHit}>
-            <i className={`fa ${props.isLoading ? "fa-spin" : ""} fa-refresh`} /> Refresh
+            <i className={`fa ${props.isLoading ? "fa-spin" : ""} fa-sync`} /> Refresh
           </a>
         </div>
         <div style={{ height: "1px", backgroundColor: "darkred", width: 65 / REFRESH_TIME * this.state.seconds }} />

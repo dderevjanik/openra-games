@@ -71,6 +71,7 @@
 
         &:hover {
           color: @primary-color;
+          // text-decoration: underline;
         }
       }
 
@@ -157,7 +158,10 @@
       background: transparent;
 
       & > div > div > span {
-        color: @primary-color !important;
+        // Text color for server name
+
+        // color: @primary-color !important;
+        // text-decoration: underline;
       }
     }
   }
@@ -214,4 +218,17 @@
 
 .ant-select-selection__choice__content > span {
   display: none;
+}
+
+.click-to-expand-row {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.click-to-expand-row:hover {
+  text-decoration: underline;
+}
+
+.placeholder-minimap {
+  background-color: grey;
 }

@@ -1,8 +1,8 @@
 import * as React from "react";
 import chunk from "lodash.chunk";
-import { fetchMap } from "../Apiz";
 import { TMap } from "../types/TMap";
 import { TGame } from "../types/TGame";
+import { mapFetcher } from "../modules/MapFetcher";
 
 type Props = {
   id: string;
@@ -28,7 +28,7 @@ export class Map extends React.Component<Props, State> {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 
   async componentDidMount() {
-    const mapInfo = (await fetchMap(this.props.hash))[0];
+    const mapInfo = (await mapFetcher.fetchSingle(this.props.hash)) as TMap;
     if (this.canvasRef && this.canvasRef.current) {
       const canvas = this.canvasRef.current;
       const ctx = canvas.getContext("2d");
@@ -85,7 +85,14 @@ export class Map extends React.Component<Props, State> {
             </a>
           ) : null}
         </div>
-        <canvas ref={this.canvasRef} id={props.id} style={{ background: "#1e2120" }} width={1} height={1} />
+        <canvas
+          className={this.state.mapInfo ? "animated zoomIn" : "placeholder-minimap"}
+          ref={this.canvasRef}
+          id={props.id}
+          style={{ background: "#1e2120" }}
+          width={1}
+          height={1}
+        />
         {state.isLoading ? <i className="fa fa-2x fa-spin fa-refresh" /> : null}
         {/* <div style={{ textAlign: "center" }}>
           {state.mapInfo ? (
