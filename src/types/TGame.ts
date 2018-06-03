@@ -9,7 +9,7 @@ export type TGameBase = {
      * Hex value without prefix '#'
      */
     color: string;
-    faction: string; // TODO: add icon
+    faction: string;
     isadmin: boolean;
     isbot: boolean;
     isspectator: boolean;
@@ -21,7 +21,7 @@ export type TGameBase = {
   location: boolean;
   map: string;
   maxplayers: number;
-  mod: string; // TODO: add icons
+  mod: string;
   name: string;
   players: number;
   protected: boolean;

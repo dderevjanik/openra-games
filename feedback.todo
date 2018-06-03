@@ -1,36 +1,35 @@
-there seems to be quite a bit of unused space on the left when expanding the game info
-and checkbox to filter out empty games? :)
-looks good otherwise, imho
-(well, we might not need to show the map hash)
+[ ] also, when you expand a server, I don't think you need a hline between its name and the expanded info
+[ ] (maybe just putting the download icon next to the map name might work)
 
-hm, can't really say anythign about implementation but you could try to use a column per team instead of stacking them
-on the otherhand that becaomes problematic whne there are more than 2 teams
-probably not a good idea
+[x] there seems to be quite a bit of unused space on the left when expanding the game info
+[x] and checkbox to filter out empty games? :)
+[x] looks good otherwise, imho
+[x] (well, we might not need to show the map hash)
 
-would it be possible to have a "Join game" button that launches the game with arguments to join that lobby?
-if we would want that
+[x] hm, can't really say anythign about implementation but you could try to use a column per team instead of stacking them
+[x] on the otherhand that becaomes problematic whne there are more than 2 teams
+[x] probably not a good idea
 
-IMO the map uid there is just clutter
-it doesn't convey any meaningful info to a human viewer
-assuming thats what the hash below the title is
-you can save probably 1/3 of your vertical height by removing that then reducing the row height
+[x] would it be possible to have a "Join game" button that launches the game with arguments to join that lobby?
+[x] if we would want that
 
-as from the design standpoint - I'd like less spaced rows, darker lines between rows (or maybe just 2 interchanging colors for rows)
-and less outstanding features overall (expand button and players indicator borders darker than white)
+[x] IMO the map uid there is just clutter
+[x] it doesn't convey any meaningful info to a human viewer
+[x] assuming thats what the hash below the title is
+[x] you can save probably 1/3 of your vertical height by removing that then reducing the row height
 
-also, you can show version on the "Mod" icon popup
+[x] as from the design standpoint - I'd like less spaced rows, darker lines between rows (or maybe just 2 interchanging colors for rows)
+[x] and less outstanding features overall (expand button and players indicator borders darker than white)
 
-waiting/empty/protected/started
+[x] also, you can show version on the "Mod" icon popup
 
-also, when you expand a server, I don't think you need a hline between its name and the expanded info
+[x] waiting/empty/protected/started
 
+[x] hm, is it possible to expand the info about the server when you just click at the title/background?
+[x] also not sure if we need a link to the map and a download link. doesn't really hurt though (maybe only increases size)
 
-hm, is it possible to expand the info about the server when you just click at the title/background?
-also not sure if we need a link to the map and a download link. doesn't really hurt though (maybe only increases size)
-(maybe just putting the download icon next to the map name might work)
+[x] agreed on both points actually
+[x] also, popup needs a bit more opacity
+[x] if you popup a player list over expanded server with another playerlist, it gets messed up
 
-agreed on both points actually
-also, popup needs a bit more opacity
-if you popup a player list over expanded server with another playerlist, it gets messed up
-
-also red color highlighting sets me off a bit, I always think that this is a locked server :)
+[x] also red color highlighting sets me off a bit, I always think that this is a locked server :)

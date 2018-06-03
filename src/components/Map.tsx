@@ -1,8 +1,8 @@
 import * as React from "react";
-import chunk from "lodash.chunk";
 import { TMap } from "../types/TMap";
 import { TGame } from "../types/TGame";
 import { mapFetcher } from "../modules/MapFetcher";
+import { drawMiniMap } from "../modules/MiniMapDrawer";
 
 type Props = {
   id: string;
@@ -36,40 +36,15 @@ export class Map extends React.Component<Props, State> {
       canvas.width = parseInt(mapInfo.width);
       canvas.height = parseInt(mapInfo.height);
 
-      const minimap = new Image();
-      minimap.src = `data:image/jpeg;base64,${mapInfo.minimap}`;
-      minimap.onload = () => {
-        // TODO: draw minimap asynchronously, move it to another method that can be used on every component's update
-        const bounds = mapInfo.bounds.split(",").map(pos => parseInt(pos));
-        const spawnPoints = chunk(mapInfo.spawnpoints.split(",").map(point => parseInt(point)), 2);
-
-        ctx!.drawImage(minimap, bounds[0], bounds[1]);
-        ctx!.textAlign = "center";
-        ctx!.font = "10px Arial";
-        ctx!.lineWidth = 2;
-
-        spawnPoints.forEach((spawn, index) => {
-          const isClientSpawn = this.props.clients.find(
-            client => !client.isspectator && client.spawnpoint - 1 === index
-          );
-
-          ctx!.beginPath();
-          ctx!.fillStyle = isClientSpawn ? "#" + isClientSpawn.color : "rgba(0, 0, 0, 0.3)";
-
-          ctx!.arc(spawn[0], spawn[1], 8, 0, 360);
-          ctx!.fill();
-          ctx!.stroke();
-
-          ctx!.fillStyle = "white";
-          ctx!.strokeText(index.toString(), spawn[0], spawn[1] + 4); // +3 -> align vertical
-          ctx!.fillText(index.toString(), spawn[0], spawn[1] + 4); // +3 -> align vertical
-        });
-
+      if (ctx) {
+        drawMiniMap(ctx, mapInfo, this.props.clients); // Async
         this.setState({
           mapInfo: mapInfo,
           isLoading: false
         });
-      };
+      } else {
+        // TODO: Throw component error... or rather not
+      }
     }
   }
 

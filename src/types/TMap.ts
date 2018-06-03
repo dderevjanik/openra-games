@@ -24,7 +24,7 @@ export type TMap = Readonly<{
   rating: number;
   mapformat: number;
   last_revision: string;
-  tileset: string; // TODO: add icons
+  tileset: string;
   /**
    * base64 format
    */
@@ -41,8 +41,8 @@ export type TMap = Readonly<{
    * DateTime "2017-02-18 20:53:42.604546+00:00";
    */
   posted: string;
-  categories: string[]; // TODO: add icons
-  game_mod: string; // TODO: add icons
+  categories: string[];
+  game_mod: string;
   map_hash: string;
   height: string;
 }>;
