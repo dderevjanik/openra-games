@@ -68,7 +68,7 @@ export class Filters extends React.Component<Props, State> {
               <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
             </a>{" "}
             {props.filterHasChanged ? (
-              <a href="#" onClick={props.onResetFilters}>
+              <a href="#" onClick={props.onResetFilters} style={{ marginLeft: "10px" }}>
                 <i className="fa fa-times" /> Reset Filters
               </a>
             ) : null}

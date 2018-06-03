@@ -68,7 +68,6 @@ export class Map extends React.Component<Props, State> {
           width={1}
           height={1}
         />
-        {state.isLoading ? <i className="fa fa-2x fa-spin fa-refresh" /> : null}
         {/* <div style={{ textAlign: "center" }}>
           {state.mapInfo ? (
             <a href={state.mapInfo.url} style={{ color: "white" }}>

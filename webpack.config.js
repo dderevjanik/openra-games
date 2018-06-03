@@ -1,5 +1,6 @@
 const path = require("path");
 const Webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const baseConfig = {
   entry: "./src/Index.tsx",
@@ -28,9 +29,10 @@ const baseConfig = {
       {
         test: /\.less$/,
         use: [
-          {
-            loader: "style-loader"
-          },
+          MiniCssExtractPlugin.loader,
+          // {
+          //   loader: "style-loader"
+          // },
           {
             loader: "css-loader"
           },
@@ -44,7 +46,12 @@ const baseConfig = {
       }
     ]
   },
-  plugins: []
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    })
+  ]
 };
 
 module.exports = baseConfig;

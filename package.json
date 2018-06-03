@@ -32,6 +32,7 @@
     "fuzzysearch": "^1.0.3",
     "lodash.chunk": "^4.2.0",
     "lodash.groupby": "^4.6.0",
+    "mini-css-extract-plugin": "^0.4.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   }

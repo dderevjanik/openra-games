@@ -22,7 +22,7 @@ const Team = (props: { mod: string; team: string; members: TGame["clients"]; sho
             ? "(?)"
             : `(${member.spawnpoint - 1})`
           : ""}
-        {member.isadmin ? <i className="fa fa-user-cog" /> : null}
+        {member.isadmin ? <i className="fa fa-user-cog" style={{ marginLeft: "5px" }} /> : null}
         <span
           style={{
             color: "#" + member.color,

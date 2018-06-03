@@ -210,7 +210,6 @@ export class App extends React.Component<{}, State> {
         >
           <Table.Column
             key="mod"
-            title="Mod"
             // width={70}
             dataIndex="mod"
             sorter={(g1: TGame, g2: TGame) => (g1.mod < g2.mod ? -1 : 1)}
@@ -241,10 +240,11 @@ export class App extends React.Component<{}, State> {
                           address={record.address}
                           gameVersion={record.version}
                           location={record.location}
+                          mod={record.mod}
                         />
                       }
                     >
-                      <div>
+                      <div style={{ marginRight: "15px" }}>
                         <img src={`icons/${record.mod}.png`} height={24} />
                       </div>
                     </Tooltip>
@@ -277,7 +277,14 @@ export class App extends React.Component<{}, State> {
           />
           <Table.Column
             key="players"
-            title={<i className="fa fa-users" />}
+            title={
+              <Tooltip
+                title={<small>players / max. players</small>}
+                getPopupContainer={target => target as HTMLElement}
+              >
+                <i className="fa fa-users" />
+              </Tooltip>
+            }
             width={90}
             sorter={(a: TGame, b: TGame) => a.players - b.players}
             defaultSortOrder={"descend"}
@@ -295,7 +302,11 @@ export class App extends React.Component<{}, State> {
           />
           <Table.Column
             key="addons"
-            title={<i className="fa fa-clock" />}
+            title={
+              <div style={{ textAlign: "right" }}>
+                <i className="fa fa-clock" />
+              </div>
+            }
             width={50}
             render={(_, record: TGame) => (
               <div style={{ textAlign: "right" }}>
@@ -304,7 +315,9 @@ export class App extends React.Component<{}, State> {
                   <JoinButton address={record.address} version={record.version} />
                 ) : record.state === 2 ? (
                   <Playtime playtime={record.playtime} />
-                ) : null}
+                ) : (
+                  <small style={{ color: "grey" }}>Full</small>
+                )}
               </div>
             )}
           />
