@@ -1,8 +1,9 @@
 import * as React from "react";
-import { TMap } from "../types/TMap";
-import { TGame } from "../types/TGame";
-import { mapFetcher } from "../modules/MapFetcher";
-import { drawMiniMap } from "../modules/MiniMapDrawer";
+import { TMap } from "../../types/TMap";
+import { TGame } from "../../types/TGame";
+import { mapFetcher } from "../../modules/MapFetcher";
+import { drawMiniMap } from "../../modules/MiniMapDrawer";
+import Icon from "antd/lib/icon";
 
 type Props = {
   id: string;
@@ -28,11 +29,11 @@ export class Map extends React.Component<Props, State> {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 
   async componentDidMount() {
-    const mapInfo = (await mapFetcher.fetchSingle(this.props.hash)) as TMap;
     if (this.canvasRef && this.canvasRef.current) {
       const canvas = this.canvasRef.current;
       const ctx = canvas.getContext("2d");
 
+      const mapInfo = (await mapFetcher.fetchSingle(this.props.hash)) as TMap;
       canvas.width = parseInt(mapInfo.width);
       canvas.height = parseInt(mapInfo.height);
 
@@ -43,7 +44,7 @@ export class Map extends React.Component<Props, State> {
           isLoading: false
         });
       } else {
-        // TODO: Throw component error... or rather not
+        // Throw component error... or rather not
       }
     }
   }
@@ -54,9 +55,15 @@ export class Map extends React.Component<Props, State> {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ textAlign: "center" }}>
           {state.mapInfo ? (
-            <a href={"https://resource.openra.net/maps/" + state.mapInfo.id} target="_blank">
-              {state.mapInfo.title}
-              {/* <i className="fa fa-external-link" /> */}
+            <a
+              href={"https://resource.openra.net/maps/" + state.mapInfo.id}
+              target="_blank"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              {state.mapInfo.title + " "}
+              <small style={{ marginLeft: "5px" }}>
+                <Icon type="link" />
+              </small>
             </a>
           ) : null}
         </div>
@@ -64,7 +71,7 @@ export class Map extends React.Component<Props, State> {
           className={this.state.mapInfo ? "animated zoomIn" : "placeholder-minimap"}
           ref={this.canvasRef}
           id={props.id}
-          style={{ background: "#1e2120" }}
+          style={{ background: "#1e2120", maxWidth: "200px" }}
           width={1}
           height={1}
         />

@@ -7,7 +7,9 @@ const baseConfig = {
   devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "docs"),
-    filename: "app.js"
+    filename: "ora-games-browser.js",
+    library: "gamesBrowser",
+    libraryTarget: "var"
   },
   devServer: {
     contentBase: __dirname + "/docs"
@@ -48,7 +50,7 @@ const baseConfig = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: "ora-games-browser.css",
       chunkFilename: "[id].css"
     })
   ]

@@ -1,6 +1,6 @@
 import { storage } from "./LocalStorage";
 import { TMap } from "../types/TMap";
-import { fetchMap } from "../Apiz";
+import { fetchMap } from "../Api";
 
 class MapFetcher {
   private readonly cachedMaps: { [hash: string]: TMap } = {};
@@ -11,7 +11,6 @@ class MapFetcher {
 
   constructor() {
     if (storage.exists) {
-      // TODO: Load maps from local storage
       this.cachedMaps = storage.get("maps");
     }
 

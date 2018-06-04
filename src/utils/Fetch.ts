@@ -1,4 +1,4 @@
-export function apiCall<T>(url: string): Promise<T> {
+export function asyncFetch<T>(url: string): Promise<T> {
   return fetch(url).then((response: any) => {
     if (response.ok) {
       return response.json().then((response: any) => response);

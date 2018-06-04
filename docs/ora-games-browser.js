@@ -1,3 +1,4 @@
+var gamesBrowser =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -36,17 +37,32 @@
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -55927,40 +55943,33 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./src/Apiz.ts":
-/*!*********************!*\
-  !*** ./src/Apiz.ts ***!
-  \*********************/
+/***/ "./src/Api.ts":
+/*!********************!*\
+  !*** ./src/Api.ts ***!
+  \********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ApiCall_1 = __webpack_require__(/*! ./utils/ApiCall */ "./src/utils/ApiCall.ts");
+var Fetch_1 = __webpack_require__(/*! ./utils/Fetch */ "./src/utils/Fetch.ts");
 var URL_GAMES = "https://master.openra.net/games?protocol=2&type=json";
 var URL_MAP = "https://resource.openra.net/map/hash";
 var URL_VERSIONS = "https://www.openra.net/versions.json";
 function fetchGames() {
-    return ApiCall_1.apiCall(URL_GAMES);
+    return Fetch_1.asyncFetch(URL_GAMES);
 }
 exports.fetchGames = fetchGames;
 /**
  * @param hash - map hash
  */
 function fetchMap(hash) {
-    return ApiCall_1.apiCall(URL_MAP + "/" + hash);
+    return Fetch_1.asyncFetch(URL_MAP + "/" + hash);
 }
 exports.fetchMap = fetchMap;
-/**
- * @param hashes - array of map hash
- */
-function fetchMaps(hashes) {
-    return ApiCall_1.apiCall(URL_MAP + "/" + hashes.join(","));
-}
-exports.fetchMaps = fetchMaps;
 function fetchOpenRAVersions() {
-    return ApiCall_1.apiCall(URL_VERSIONS);
+    return Fetch_1.asyncFetch(URL_VERSIONS);
 }
 exports.fetchOpenRAVersions = fetchOpenRAVersions;
 
@@ -56042,8 +56051,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var fuzzysearch_1 = __importDefault(__webpack_require__(/*! fuzzysearch */ "./node_modules/fuzzysearch/index.js"));
-var Map_1 = __webpack_require__(/*! ./components/Map */ "./src/components/Map.tsx");
-var Apiz_1 = __webpack_require__(/*! ./Apiz */ "./src/Apiz.ts");
+var Map_1 = __webpack_require__(/*! ./components/molecules/Map */ "./src/components/molecules/Map.tsx");
+var Api_1 = __webpack_require__(/*! ./Api */ "./src/Api.ts");
+var ServerName_1 = __webpack_require__(/*! ./components/molecules/ServerName */ "./src/components/molecules/ServerName.tsx");
 // import {  Table, Tooltip, Pagination } from "antd";
 var layout_1 = __importDefault(__webpack_require__(/*! antd/lib/layout */ "./node_modules/antd/lib/layout/index.js"));
 var table_1 = __importDefault(__webpack_require__(/*! antd/lib/table */ "./node_modules/antd/lib/table/index.js"));
@@ -56053,15 +56063,15 @@ var col_1 = __importDefault(__webpack_require__(/*! antd/lib/col */ "./node_modu
 var Filters_1 = __webpack_require__(/*! ./components/Filters */ "./src/components/Filters.tsx");
 __webpack_require__(/*! ./styles/main.less */ "./src/styles/main.less");
 var ClientsInfo_1 = __webpack_require__(/*! ./components/ClientsInfo */ "./src/components/ClientsInfo.tsx");
-var ClientLabel_1 = __webpack_require__(/*! ./components/ClientLabel */ "./src/components/ClientLabel.tsx");
+var ClientLabel_1 = __webpack_require__(/*! ./components/atoms/ClientLabel */ "./src/components/atoms/ClientLabel.tsx");
 var GamesCounter_1 = __webpack_require__(/*! ./components/GamesCounter */ "./src/components/GamesCounter.tsx");
-var JoinButton_1 = __webpack_require__(/*! ./components/JoinButton */ "./src/components/JoinButton.tsx");
-var GameInfo_1 = __webpack_require__(/*! ./components/GameInfo */ "./src/components/GameInfo.tsx");
+var JoinButton_1 = __webpack_require__(/*! ./components/atoms/JoinButton */ "./src/components/atoms/JoinButton.tsx");
 var Sorters_1 = __webpack_require__(/*! ./utils/Sorters */ "./src/utils/Sorters.ts");
 var Predicates_1 = __webpack_require__(/*! ./utils/Predicates */ "./src/utils/Predicates.ts");
 var DefaultFilters_1 = __webpack_require__(/*! ./data/DefaultFilters */ "./src/data/DefaultFilters.ts");
 var LocalStorage_1 = __webpack_require__(/*! ./modules/LocalStorage */ "./src/modules/LocalStorage.ts");
 var Playtime_1 = __webpack_require__(/*! ./components/Playtime */ "./src/components/Playtime.tsx");
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App(props) {
@@ -56088,7 +56098,7 @@ var App = /** @class */ (function (_super) {
                         var games, filteredGames;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, Apiz_1.fetchGames()];
+                                case 0: return [4 /*yield*/, Api_1.fetchGames()];
                                 case 1:
                                     games = _a.sent();
                                     filteredGames = this.filterGames(games, this.state.filters);
@@ -56106,6 +56116,7 @@ var App = /** @class */ (function (_super) {
             });
         }); };
         _this.onFilterChange = function (filterName, newValue) {
+            var _a;
             var filters = __assign({}, _this.state.filters, (_a = {}, _a[filterName] = newValue // Update specific filter
             , _a));
             LocalStorage_1.storage.set("filter", filters);
@@ -56116,13 +56127,12 @@ var App = /** @class */ (function (_super) {
                 filteredGames: filteredGames,
                 filterHasChanged: true
             });
-            var _a;
         };
         _this.toggleExpandedRow = function (key) {
             var isExpanded = _this.state.expandedRows.includes(key);
             if (isExpanded) {
-                // TODO: Optimize
-                var expandedRows = _this.state.expandedRows.filter(function (k) { return k !== key; });
+                var elIndex = _this.state.expandedRows.indexOf(key);
+                var expandedRows = _this.state.expandedRows.slice(0, elIndex).concat(_this.state.expandedRows.slice(elIndex + 1));
                 _this.setState({
                     expandedRows: expandedRows
                 });
@@ -56186,7 +56196,7 @@ var App = /** @class */ (function (_super) {
             var _a, games, versions, updatedFilter, filteredGames;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, Promise.all([Apiz_1.fetchGames(), Apiz_1.fetchOpenRAVersions()])];
+                    case 0: return [4 /*yield*/, Promise.all([Api_1.fetchGames(), Api_1.fetchOpenRAVersions()])];
                     case 1:
                         _a = _b.sent(), games = _a[0], versions = _a[1];
                         updatedFilter = __assign({}, this.state.filters, { version: versions.release });
@@ -56224,30 +56234,20 @@ var App = /** @class */ (function (_super) {
                 React.createElement(table_1.default.Column, { key: "name", title: "Name", sorter: Sorters_1.alphabeticalSorter, render: function (_, record) {
                         return {
                             children: (React.createElement("div", { className: "click-to-expand-row", onClick: function () { return _this.toggleExpandedRow(record.id); }, style: { display: "flex", flexDirection: "row", alignItems: "center" } },
-                                React.createElement(tooltip_1.default, { getPopupContainer: function (target) { return target; }, title: React.createElement(GameInfo_1.GameInfo, { allVersions: state.versions, address: record.address, gameVersion: record.version, location: record.location, mod: record.mod }) },
-                                    React.createElement("div", { style: { marginRight: "15px" } },
-                                        React.createElement("img", { src: "icons/" + record.mod + ".png", height: 24 }))),
-                                record.protected ? (React.createElement(tooltip_1.default, { title: React.createElement("small", null, "Game is password protected"), getPopupContainer: function (target) { return target; } },
-                                    React.createElement("small", { style: { marginLeft: "5px" } },
-                                        React.createElement("i", { className: "fa fa-lock" })))) : null,
-                                " ",
-                                React.createElement("span", { style: {
-                                        marginLeft: "5px",
-                                        color: record.state === 2 ? "green" : record.players > 0 ? "orange" : ""
-                                    } }, record.name))),
+                                React.createElement(ServerName_1.ServerName, { address: record.address, gameVersion: record.version, isLatestVersion: record.version === _this.state.versions[0], isProtected: record.protected, state: record.state, location: record.location, mod: record.mod, players: record.players, serverName: record.name }))),
                             props: {
                                 colSpan: 2
                             }
                         };
                     } }),
                 React.createElement(table_1.default.Column, { key: "players", title: React.createElement(tooltip_1.default, { title: React.createElement("small", null, "players / max. players"), getPopupContainer: function (target) { return target; } },
-                        React.createElement("i", { className: "fa fa-users" })), width: 90, sorter: function (a, b) { return a.players - b.players; }, defaultSortOrder: "descend", render: function (_, record) { return (React.createElement("div", null,
+                        React.createElement(icon_1.default, { type: "team" })), width: 90, sorter: function (a, b) { return a.players - b.players; }, defaultSortOrder: "descend", render: function (_, record) { return (React.createElement("div", null,
                         record.players,
                         " / ",
                         record.maxplayers)); } }),
-                React.createElement(table_1.default.Column, { key: "clients", title: React.createElement("i", { className: "fa fa-user" }), width: 100, render: function (_, record) { return React.createElement(ClientLabel_1.ClientLabel, { game: record }); } }),
+                React.createElement(table_1.default.Column, { key: "clients", title: React.createElement(icon_1.default, { type: "user" }), width: 100, render: function (_, record) { return React.createElement(ClientLabel_1.ClientLabel, { game: record }); } }),
                 React.createElement(table_1.default.Column, { key: "addons", title: React.createElement("div", { style: { textAlign: "right" } },
-                        React.createElement("i", { className: "fa fa-clock" })), width: 50, render: function (_, record) { return (React.createElement("div", { style: { textAlign: "right" } }, // Don't show Join button on running games, neither on full servers
+                        React.createElement(icon_1.default, { type: "clock-circle-o" })), width: 50, render: function (_, record) { return (React.createElement("div", { style: { textAlign: "right" } }, // Don't show Join button on running games, neither on full servers
                     Predicates_1.isJoinable(record) ? (React.createElement(JoinButton_1.JoinButton, { address: record.address, version: record.version })) : record.state === 2 ? (React.createElement(Playtime_1.Playtime, { playtime: record.playtime })) : (React.createElement("small", { style: { color: "grey" } }, "Full")))); } })),
             state.filteredGames.length > 0 ? (React.createElement(GamesCounter_1.GamesCounter, { current: state.filteredGames.length, total: state.games.length })) : null));
     };
@@ -56267,6 +56267,14 @@ exports.App = App;
 
 "use strict";
 
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -56278,104 +56286,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_dom_1 = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 var App_1 = __webpack_require__(/*! ./App */ "./src/App.tsx");
-react_dom_1.render(React.createElement(App_1.App, null), document.getElementById("app"));
-
-
-/***/ }),
-
-/***/ "./src/components/AdvancedFilters.tsx":
-/*!********************************************!*\
-  !*** ./src/components/AdvancedFilters.tsx ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var fuzzysearch_1 = __importDefault(__webpack_require__(/*! fuzzysearch */ "./node_modules/fuzzysearch/index.js"));
-var row_1 = __importDefault(__webpack_require__(/*! antd/lib/row */ "./node_modules/antd/lib/row/index.js"));
-var slider_1 = __importDefault(__webpack_require__(/*! antd/lib/slider */ "./node_modules/antd/lib/slider/index.js"));
-var select_1 = __importDefault(__webpack_require__(/*! antd/lib/select */ "./node_modules/antd/lib/select/index.js"));
-var col_1 = __importDefault(__webpack_require__(/*! antd/lib/col */ "./node_modules/antd/lib/col/index.js"));
-var ModData_1 = __webpack_require__(/*! ../data/ModData */ "./src/data/ModData.ts");
-exports.AdvancedFilters = function (props) { return (React.createElement("div", { style: { padding: "10px", background: "rgba(39, 45, 44, 0.5)" } },
-    React.createElement(row_1.default, null,
-        React.createElement(col_1.default, { span: 8 },
-            React.createElement("label", null, "Version:"),
-            React.createElement(select_1.default, { value: props.version, onChange: function (value) { return props.onFilterChange("version", value); }, filterOption: function (input, option) { return fuzzysearch_1.default(option.props.children.toString().toLowerCase(), input); }, style: { minWidth: 130 }, getPopupContainer: function (target) { return target; } },
-                React.createElement(select_1.default.Option, { key: "-- ALL --", value: "-- ALL --" }, "-- ALL --"),
-                props.versions.map(function (v) { return (React.createElement(select_1.default.Option, { key: v, value: v }, v)); }))),
-        React.createElement(col_1.default, { span: 14 },
-            React.createElement("label", null, "Players:"),
-            React.createElement(slider_1.default, { range: true, min: 0, max: 16, value: props.players, onChange: function (values) { return props.onFilterChange("players", values); }, step: 1, marks: {
-                    0: 0,
-                    2: 2,
-                    4: 4,
-                    8: 8,
-                    16: 16
-                } }))),
-    React.createElement(row_1.default, { style: { alignItems: "center" } },
-        React.createElement("label", null, "Mods:"),
-        React.createElement("div", null,
-            React.createElement(select_1.default, { mode: "tags", value: props.games, tokenSeparators: [","], onChange: function (values) { return props.onFilterChange("games", values); }, style: { minWidth: 200 }, className: "tags", getPopupContainer: function (target) { return target; } }, ModData_1.ModData.mods.map(function (mod, index) { return (React.createElement(select_1.default.Option, { key: index, value: mod.mod },
-                React.createElement("img", { width: "16", height: "16", alt: mod.name, src: "icons/" + mod.icon }),
-                React.createElement("span", null, mod.name))); })))))); };
-
-
-/***/ }),
-
-/***/ "./src/components/ClientLabel.tsx":
-/*!****************************************!*\
-  !*** ./src/components/ClientLabel.tsx ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var tag_1 = __importDefault(__webpack_require__(/*! antd/lib/tag */ "./node_modules/antd/lib/tag/index.js"));
-var tooltip_1 = __importDefault(__webpack_require__(/*! antd/lib/tooltip */ "./node_modules/antd/lib/tooltip/index.js"));
-var ClientsInfo_1 = __webpack_require__(/*! ./ClientsInfo */ "./src/components/ClientsInfo.tsx");
-exports.ClientLabel = function (props) {
-    if (props.game.clients.length === 0) {
-        return null;
+var LocalStorage_1 = __webpack_require__(/*! ./modules/LocalStorage */ "./src/modules/LocalStorage.ts");
+var DefaultFilters_1 = __webpack_require__(/*! ./data/DefaultFilters */ "./src/data/DefaultFilters.ts");
+exports.Component = App_1.App;
+function mount(el, defaultConfig) {
+    if (LocalStorage_1.storage.exists) {
+        LocalStorage_1.storage.set("filter", __assign({}, DefaultFilters_1.defaultFilters, defaultConfig));
     }
-    return (React.createElement(tooltip_1.default, { title: React.createElement(ClientsInfo_1.ClientsInfo, { clients: props.game.clients, mod: props.game.mod, orientation: "vertical", showSpawnpoints: false }), getPopupContainer: function (target) { return target; } },
-        React.createElement(tag_1.default, null,
-            props.game.players > 0 ? (React.createElement("span", null,
-                React.createElement("i", { className: "fa fa-user" }),
-                " " + props.game.players + " ")) : null,
-            props.game.bots > 0 ? (React.createElement("span", null,
-                React.createElement("i", { className: "fa fa-desktop" }),
-                " " + props.game.bots + " ")) : null,
-            props.game.spectators > 0 ? (React.createElement("span", null,
-                React.createElement("i", { className: "fa fa-eye" }),
-                " " + props.game.spectators + " ")) : null)));
-};
+    react_dom_1.render(React.createElement(App_1.App, null), el);
+}
+exports.mount = mount;
 
 
 /***/ }),
@@ -56402,20 +56322,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var lodash_groupby_1 = __importDefault(__webpack_require__(/*! lodash.groupby */ "./node_modules/lodash.groupby/index.js"));
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
 var Team = function (props) { return (React.createElement("div", { style: { padding: "2px" } },
     React.createElement("div", { style: { textAlign: "left" } }, props.team === "0" ? "No Team" : "Team " + props.team),
     props.members.map(function (member, index) { return (React.createElement("div", { key: member.name + index },
         React.createElement("img", { src: "icons/" + props.mod + "_" + member.faction.toLowerCase() + ".png" }),
         " ",
-        member.isspectator ? React.createElement("i", { className: "fa fa-eye" }) : null,
-        member.isbot ? React.createElement("i", { className: "fa fa-desktop" }) : null,
+        member.isspectator ? React.createElement(icon_1.default, { type: "eye-o" }) : null,
+        member.isbot ? React.createElement(icon_1.default, { type: "desktop" }) : null,
         " ",
         props.showSpawnpoints && !member.isspectator
             ? member.spawnpoint === 0
                 ? "(?)"
                 : "(" + (member.spawnpoint - 1) + ")"
             : "",
-        member.isadmin ? React.createElement("i", { className: "fa fa-user-cog", style: { marginLeft: "5px" } }) : null,
+        member.isadmin ? React.createElement(icon_1.default, { type: "star-o", style: { marginLeft: "5px" } }) : null,
         React.createElement("span", { style: {
                 color: "#" + member.color,
                 textShadow: "1px 1px 0 rgba(255, 255, 255, 0.4)"
@@ -56465,9 +56386,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var row_1 = __importDefault(__webpack_require__(/*! antd/lib/row */ "./node_modules/antd/lib/row/index.js"));
 var input_1 = __importDefault(__webpack_require__(/*! antd/lib/input */ "./node_modules/antd/lib/input/index.js"));
-var checkbox_1 = __importDefault(__webpack_require__(/*! antd/lib/checkbox */ "./node_modules/antd/lib/checkbox/index.js"));
-var AdvancedFilters_1 = __webpack_require__(/*! ./AdvancedFilters */ "./src/components/AdvancedFilters.tsx");
+var AdvancedFilters_1 = __webpack_require__(/*! ./molecules/AdvancedFilters */ "./src/components/molecules/AdvancedFilters.tsx");
 var RefreshButton_1 = __webpack_require__(/*! ./RefreshButton */ "./src/components/RefreshButton.tsx");
+var ShowGames_1 = __webpack_require__(/*! ./molecules/ShowGames */ "./src/components/molecules/ShowGames.tsx");
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
 var Filters = /** @class */ (function (_super) {
     __extends(Filters, _super);
     function Filters(props) {
@@ -56482,26 +56404,19 @@ var Filters = /** @class */ (function (_super) {
         var _a = this, props = _a.props, state = _a.state;
         return (React.createElement("div", { className: "filters" },
             React.createElement(row_1.default, { style: { alignItems: "center" } },
-                React.createElement("label", null, "Show:"),
-                React.createElement("div", null,
-                    React.createElement(checkbox_1.default, { checked: props.showPlaying, onChange: function (e) { return props.onFilterChange("showPlaying", e.target.checked); } },
-                        React.createElement("span", { style: { color: "green" } }, "Playing")),
-                    React.createElement(checkbox_1.default, { checked: props.showWaiting, onChange: function (e) { return props.onFilterChange("showWaiting", e.target.checked); } },
-                        React.createElement("span", { style: { color: "orange" } }, "Waiting")),
-                    React.createElement(checkbox_1.default, { checked: props.showEmpty, onChange: function (e) { return props.onFilterChange("showEmpty", e.target.checked); } }, "Empty"),
-                    React.createElement(checkbox_1.default, { checked: props.showProtected, onChange: function (e) { return props.onFilterChange("showProtected", e.target.checked); } }, "Protected"))),
+                React.createElement(ShowGames_1.ShowGames, { showPlaying: props.showPlaying, showWaiting: props.showWaiting, showEmpty: props.showEmpty, showProtected: props.showProtected, onFilterChange: props.onFilterChange })),
             React.createElement(row_1.default, null,
                 React.createElement(input_1.default.Search, { placeholder: "Search for a game...", value: props.search, onChange: function (e) { return props.onFilterChange("search", e.target.value); }, className: "searchname" })),
             React.createElement("div", { style: { display: "flex", flexDirection: "row", justifyContent: "space-between" } },
                 React.createElement("div", { style: { background: state.showAdvancedFilters ? "rgba(39, 45, 44, 0.5)" : "", padding: "4px 10px" } },
                     React.createElement("a", { href: "#", onClick: function () { return _this.setState({ showAdvancedFilters: !_this.state.showAdvancedFilters }); } },
-                        React.createElement("i", { className: "fa fa-filter" }),
+                        React.createElement(icon_1.default, { type: "filter" }),
                         " ",
                         state.showAdvancedFilters ? "Hide" : "Show",
                         " advanced filters"),
                     " ",
                     props.filterHasChanged ? (React.createElement("a", { href: "#", onClick: props.onResetFilters, style: { marginLeft: "10px" } },
-                        React.createElement("i", { className: "fa fa-times" }),
+                        React.createElement(icon_1.default, { type: "close" }),
                         " Reset Filters")) : null),
                 React.createElement("div", { style: { padding: "4px 10px" } },
                     React.createElement(RefreshButton_1.RefreshButton, { isLoading: props.isLoading, onRefresh: props.onRefresh }))),
@@ -56510,47 +56425,6 @@ var Filters = /** @class */ (function (_super) {
     return Filters;
 }(React.Component));
 exports.Filters = Filters;
-
-
-/***/ }),
-
-/***/ "./src/components/GameInfo.tsx":
-/*!*************************************!*\
-  !*** ./src/components/GameInfo.tsx ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-exports.GameInfo = function (props) { return (React.createElement("div", null,
-    React.createElement("div", null,
-        React.createElement("b", null, "Mod:"),
-        " ",
-        props.mod),
-    React.createElement("div", null,
-        React.createElement("b", null, "Version:"),
-        " ",
-        props.gameVersion,
-        props.gameVersion === props.allVersions[0] ? (React.createElement("span", { style: { color: "green", marginLeft: "5px" } }, "[Latest]")) : null,
-        " "),
-    React.createElement("div", null,
-        React.createElement("b", null, "Address:"),
-        " ",
-        props.address),
-    React.createElement("div", null,
-        React.createElement("b", null, "Location:"),
-        " ",
-        props.location ? props.location : "Unknown"))); };
 
 
 /***/ }),
@@ -56582,151 +56456,6 @@ exports.GamesCounter = function (props) { return (React.createElement("div", { s
 
 /***/ }),
 
-/***/ "./src/components/JoinButton.tsx":
-/*!***************************************!*\
-  !*** ./src/components/JoinButton.tsx ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var button_1 = __importDefault(__webpack_require__(/*! antd/lib/button */ "./node_modules/antd/lib/button/index.js"));
-exports.JoinButton = function (props) { return (React.createElement(button_1.default, { type: "ghost", href: "openra-ra-" + props.version + "://" + props.address, size: "small" }, "Join")); };
-
-
-/***/ }),
-
-/***/ "./src/components/Map.tsx":
-/*!********************************!*\
-  !*** ./src/components/Map.tsx ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var MapFetcher_1 = __webpack_require__(/*! ../modules/MapFetcher */ "./src/modules/MapFetcher.ts");
-var MiniMapDrawer_1 = __webpack_require__(/*! ../modules/MiniMapDrawer */ "./src/modules/MiniMapDrawer.ts");
-var Map = /** @class */ (function (_super) {
-    __extends(Map, _super);
-    function Map(props) {
-        var _this = _super.call(this, props) || this;
-        _this.canvasRef = React.createRef();
-        _this.state = {
-            isLoading: true,
-            mapInfo: null
-        };
-        return _this;
-    }
-    Map.prototype.componentDidMount = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var mapInfo, canvas, ctx;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, MapFetcher_1.mapFetcher.fetchSingle(this.props.hash)];
-                    case 1:
-                        mapInfo = (_a.sent());
-                        if (this.canvasRef && this.canvasRef.current) {
-                            canvas = this.canvasRef.current;
-                            ctx = canvas.getContext("2d");
-                            canvas.width = parseInt(mapInfo.width);
-                            canvas.height = parseInt(mapInfo.height);
-                            if (ctx) {
-                                MiniMapDrawer_1.drawMiniMap(ctx, mapInfo, this.props.clients); // Async
-                                this.setState({
-                                    mapInfo: mapInfo,
-                                    isLoading: false
-                                });
-                            }
-                            else {
-                                // TODO: Throw component error... or rather not
-                            }
-                        }
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    Map.prototype.render = function () {
-        var _a = this, props = _a.props, state = _a.state;
-        return (React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center" } },
-            React.createElement("div", { style: { textAlign: "center" } }, state.mapInfo ? (React.createElement("a", { href: "https://resource.openra.net/maps/" + state.mapInfo.id, target: "_blank" }, state.mapInfo.title)) : null),
-            React.createElement("canvas", { className: this.state.mapInfo ? "animated zoomIn" : "placeholder-minimap", ref: this.canvasRef, id: props.id, style: { background: "#1e2120" }, width: 1, height: 1 })));
-    };
-    return Map;
-}(React.Component));
-exports.Map = Map;
-
-
-/***/ }),
-
 /***/ "./src/components/Playtime.tsx":
 /*!*************************************!*\
   !*** ./src/components/Playtime.tsx ***!
@@ -56745,9 +56474,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-exports.Playtime = function (props) { return (React.createElement("small", { style: { color: "grey" } }, props.playtime ? React.createElement("span", null,
-    (props.playtime / 60).toFixed(0),
-    "m") : React.createElement("span", null, "? m"))); };
+exports.Playtime = function (props) {
+    if (props.playtime) {
+        if (props.playtime >= 3600) {
+            var hours = parseInt((props.playtime / 3600).toFixed(0));
+            var minutes = ((props.playtime - hours * 3600) / 60).toFixed(0);
+            return (React.createElement("small", { style: { color: "grey" } },
+                React.createElement("span", null,
+                    hours,
+                    "h"),
+                React.createElement("span", null,
+                    minutes,
+                    "m")));
+        }
+        else {
+            return (React.createElement("small", { style: { color: "grey" } },
+                React.createElement("span", null,
+                    (props.playtime / 60).toFixed(0),
+                    "m")));
+        }
+    }
+    else {
+        return (React.createElement("small", { style: { color: "grey" } },
+            React.createElement("span", null, "? m")));
+    }
+};
 
 
 /***/ }),
@@ -56813,9 +56564,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
 var REFRESH_TIME = 30; // refresh games after 30 seconds
+var PROGRESSBAR_WIDTH = 51;
 var RefreshButton = /** @class */ (function (_super) {
     __extends(RefreshButton, _super);
     function RefreshButton(props) {
@@ -56872,13 +56628,460 @@ var RefreshButton = /** @class */ (function (_super) {
         return (React.createElement("div", null,
             React.createElement("div", null,
                 React.createElement("a", { className: "no-focus", href: "#", onClick: this.onRefreshHit },
-                    React.createElement("i", { className: "fa " + (props.isLoading ? "fa-spin" : "") + " fa-sync" }),
+                    props.isLoading ? React.createElement(icon_1.default, { type: "loading" }) : null,
                     " Refresh")),
-            React.createElement("div", { style: { height: "1px", backgroundColor: "darkred", width: 65 / REFRESH_TIME * this.state.seconds } })));
+            React.createElement("div", { style: {
+                    height: "1px",
+                    backgroundColor: "darkred",
+                    width: PROGRESSBAR_WIDTH / REFRESH_TIME * this.state.seconds
+                } })));
     };
     return RefreshButton;
 }(React.PureComponent));
 exports.RefreshButton = RefreshButton;
+
+
+/***/ }),
+
+/***/ "./src/components/atoms/ClientLabel.tsx":
+/*!**********************************************!*\
+  !*** ./src/components/atoms/ClientLabel.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var tag_1 = __importDefault(__webpack_require__(/*! antd/lib/tag */ "./node_modules/antd/lib/tag/index.js"));
+var tooltip_1 = __importDefault(__webpack_require__(/*! antd/lib/tooltip */ "./node_modules/antd/lib/tooltip/index.js"));
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
+var ClientsInfo_1 = __webpack_require__(/*! ../ClientsInfo */ "./src/components/ClientsInfo.tsx");
+exports.ClientLabel = function (props) {
+    if (props.game.clients.length === 0) {
+        return null;
+    }
+    return (React.createElement(tooltip_1.default, { title: React.createElement(ClientsInfo_1.ClientsInfo, { clients: props.game.clients, mod: props.game.mod, orientation: "vertical", showSpawnpoints: false }), getPopupContainer: function (target) { return target; } },
+        React.createElement(tag_1.default, null,
+            props.game.players > 0 ? (React.createElement("span", null,
+                React.createElement(icon_1.default, { type: "user" }),
+                " " + props.game.players + " ")) : null,
+            props.game.bots > 0 ? (React.createElement("span", null,
+                React.createElement(icon_1.default, { type: "desktop" }),
+                " " + props.game.bots + " ")) : null,
+            props.game.spectators > 0 ? (React.createElement("span", null,
+                React.createElement(icon_1.default, { type: "eye-o" }),
+                " " + props.game.spectators + " ")) : null)));
+};
+
+
+/***/ }),
+
+/***/ "./src/components/atoms/GameInfo.tsx":
+/*!*******************************************!*\
+  !*** ./src/components/atoms/GameInfo.tsx ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.GameInfo = function (props) { return (React.createElement("div", null,
+    React.createElement("div", null,
+        React.createElement("b", null, "Mod:"),
+        " ",
+        props.mod),
+    React.createElement("div", null,
+        React.createElement("b", null, "Version:"),
+        " ",
+        props.gameVersion,
+        props.isLatest ? React.createElement("span", { style: { color: "green", marginLeft: "5px" } }, "[Latest]") : null,
+        " "),
+    React.createElement("div", null,
+        React.createElement("b", null, "Address:"),
+        " ",
+        props.address),
+    React.createElement("div", null,
+        React.createElement("b", null, "Location:"),
+        " ",
+        props.location ? props.location : "Unknown"))); };
+
+
+/***/ }),
+
+/***/ "./src/components/atoms/JoinButton.tsx":
+/*!*********************************************!*\
+  !*** ./src/components/atoms/JoinButton.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var button_1 = __importDefault(__webpack_require__(/*! antd/lib/button */ "./node_modules/antd/lib/button/index.js"));
+exports.JoinButton = function (props) { return (React.createElement(button_1.default, { type: "ghost", href: "openra-ra-" + props.version + "://" + props.address, size: "small" }, "Join")); };
+
+
+/***/ }),
+
+/***/ "./src/components/molecules/AdvancedFilters.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/molecules/AdvancedFilters.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var fuzzysearch_1 = __importDefault(__webpack_require__(/*! fuzzysearch */ "./node_modules/fuzzysearch/index.js"));
+var row_1 = __importDefault(__webpack_require__(/*! antd/lib/row */ "./node_modules/antd/lib/row/index.js"));
+var slider_1 = __importDefault(__webpack_require__(/*! antd/lib/slider */ "./node_modules/antd/lib/slider/index.js"));
+var select_1 = __importDefault(__webpack_require__(/*! antd/lib/select */ "./node_modules/antd/lib/select/index.js"));
+var col_1 = __importDefault(__webpack_require__(/*! antd/lib/col */ "./node_modules/antd/lib/col/index.js"));
+var ModData_1 = __webpack_require__(/*! ../../data/ModData */ "./src/data/ModData.ts");
+var AdvancedFilters = /** @class */ (function (_super) {
+    __extends(AdvancedFilters, _super);
+    function AdvancedFilters(props) {
+        var _this = _super.call(this, props) || this;
+        _this.filterGames = function (games) { return props.onFilterChange("games", games); };
+        _this.filterPlayers = function (players) { return props.onFilterChange("players", players); };
+        _this.filterVersion = function (version) { return props.onFilterChange("version", version); };
+        return _this;
+    }
+    AdvancedFilters.prototype.shouldComponentUpdate = function (nextProps) {
+        if (this.props.version !== nextProps.version) {
+            return true;
+        }
+        if (this.props.players[0] !== nextProps.players[0] || this.props.players[1] !== nextProps.players[1]) {
+            return true;
+        }
+        if (this.props.games.length !== nextProps.games.length) {
+            return true;
+        }
+        for (var i = 0; i < this.props.games.length; i++) {
+            if (this.props.games[i] !== nextProps.games[i]) {
+                return true;
+            }
+        }
+        return false;
+    };
+    AdvancedFilters.prototype.render = function () {
+        var props = this.props;
+        return (React.createElement("div", { style: { padding: "10px", background: "rgba(39, 45, 44, 0.5)" } },
+            React.createElement(row_1.default, null,
+                React.createElement(col_1.default, { span: 8 },
+                    React.createElement("label", null, "Version:"),
+                    React.createElement(select_1.default, { value: props.version, onChange: function (value) { return props.onFilterChange("version", value); }, filterOption: function (input, option) { return fuzzysearch_1.default(option.props.children.toString().toLowerCase(), input); }, style: { minWidth: 130 }, getPopupContainer: function (target) { return target; } },
+                        React.createElement(select_1.default.Option, { key: "-- ALL --", value: "-- ALL --" }, "-- ALL --"),
+                        props.versions.map(function (v) { return (React.createElement(select_1.default.Option, { key: v, value: v }, v)); }))),
+                React.createElement(col_1.default, { span: 14 },
+                    React.createElement("label", null, "Players:"),
+                    React.createElement(slider_1.default, { range: true, min: 0, max: 16, value: props.players, onChange: function (values) { return props.onFilterChange("players", values); }, step: 1, marks: {
+                            0: 0,
+                            2: 2,
+                            4: 4,
+                            8: 8,
+                            16: 16
+                        } }))),
+            React.createElement(row_1.default, { style: { alignItems: "center" } },
+                React.createElement("label", null, "Mods:"),
+                React.createElement("div", null,
+                    React.createElement(select_1.default, { mode: "tags", value: props.games, tokenSeparators: [","], onChange: function (values) { return props.onFilterChange("games", values); }, style: { minWidth: 200 }, className: "tags", getPopupContainer: function (target) { return target; } }, ModData_1.ModData.mods.map(function (mod, index) { return (React.createElement(select_1.default.Option, { key: index, value: mod.mod },
+                        React.createElement("img", { width: "16", height: "16", alt: mod.name, src: "icons/" + mod.icon }),
+                        React.createElement("span", null, mod.name))); }))))));
+    };
+    return AdvancedFilters;
+}(React.Component));
+exports.AdvancedFilters = AdvancedFilters;
+
+
+/***/ }),
+
+/***/ "./src/components/molecules/Map.tsx":
+/*!******************************************!*\
+  !*** ./src/components/molecules/Map.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var MapFetcher_1 = __webpack_require__(/*! ../../modules/MapFetcher */ "./src/modules/MapFetcher.ts");
+var MiniMapDrawer_1 = __webpack_require__(/*! ../../modules/MiniMapDrawer */ "./src/modules/MiniMapDrawer.ts");
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
+var Map = /** @class */ (function (_super) {
+    __extends(Map, _super);
+    function Map(props) {
+        var _this = _super.call(this, props) || this;
+        _this.canvasRef = React.createRef();
+        _this.state = {
+            isLoading: true,
+            mapInfo: null
+        };
+        return _this;
+    }
+    Map.prototype.componentDidMount = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var canvas, ctx, mapInfo;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.canvasRef && this.canvasRef.current)) return [3 /*break*/, 2];
+                        canvas = this.canvasRef.current;
+                        ctx = canvas.getContext("2d");
+                        return [4 /*yield*/, MapFetcher_1.mapFetcher.fetchSingle(this.props.hash)];
+                    case 1:
+                        mapInfo = (_a.sent());
+                        canvas.width = parseInt(mapInfo.width);
+                        canvas.height = parseInt(mapInfo.height);
+                        if (ctx) {
+                            MiniMapDrawer_1.drawMiniMap(ctx, mapInfo, this.props.clients); // Async
+                            this.setState({
+                                mapInfo: mapInfo,
+                                isLoading: false
+                            });
+                        }
+                        else {
+                            // Throw component error... or rather not
+                        }
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Map.prototype.render = function () {
+        var _a = this, props = _a.props, state = _a.state;
+        return (React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center" } },
+            React.createElement("div", { style: { textAlign: "center" } }, state.mapInfo ? (React.createElement("a", { href: "https://resource.openra.net/maps/" + state.mapInfo.id, target: "_blank", style: { display: "flex", alignItems: "center" } },
+                state.mapInfo.title + " ",
+                React.createElement("small", { style: { marginLeft: "5px" } },
+                    React.createElement(icon_1.default, { type: "link" })))) : null),
+            React.createElement("canvas", { className: this.state.mapInfo ? "animated zoomIn" : "placeholder-minimap", ref: this.canvasRef, id: props.id, style: { background: "#1e2120", maxWidth: "200px" }, width: 1, height: 1 })));
+    };
+    return Map;
+}(React.Component));
+exports.Map = Map;
+
+
+/***/ }),
+
+/***/ "./src/components/molecules/ServerName.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/molecules/ServerName.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var tooltip_1 = __importDefault(__webpack_require__(/*! antd/lib/tooltip */ "./node_modules/antd/lib/tooltip/index.js"));
+var icon_1 = __importDefault(__webpack_require__(/*! antd/lib/icon */ "./node_modules/antd/lib/icon/index.js"));
+var GameInfo_1 = __webpack_require__(/*! ../atoms/GameInfo */ "./src/components/atoms/GameInfo.tsx");
+exports.ServerName = function (props) { return (React.createElement(React.Fragment, null,
+    React.createElement(tooltip_1.default, { getPopupContainer: function (target) { return target; }, title: React.createElement(GameInfo_1.GameInfo, { isLatest: props.isLatestVersion, address: props.address, gameVersion: props.gameVersion, location: props.location, mod: props.mod }) },
+        React.createElement("div", { style: { marginLeft: "4px", marginRight: "15px" } },
+            React.createElement("img", { src: "icons/" + props.mod + ".png", height: 24 }))),
+    props.isProtected ? (React.createElement(tooltip_1.default, { title: React.createElement("small", null, "Game is password protected"), getPopupContainer: function (target) { return target; } },
+        React.createElement("small", { style: { marginLeft: "5px" } },
+            React.createElement(icon_1.default, { type: "lock" })))) : null,
+    " ",
+    React.createElement("span", { style: {
+            marginLeft: "5px",
+            color: props.state === 2 ? "green" : props.players > 0 ? "orange" : ""
+        } }, props.serverName))); };
+
+
+/***/ }),
+
+/***/ "./src/components/molecules/ShowGames.tsx":
+/*!************************************************!*\
+  !*** ./src/components/molecules/ShowGames.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var checkbox_1 = __importDefault(__webpack_require__(/*! antd/lib/checkbox */ "./node_modules/antd/lib/checkbox/index.js"));
+var ShowGames = /** @class */ (function (_super) {
+    __extends(ShowGames, _super);
+    function ShowGames() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.togglePlaying = function (e) {
+            _this.props.onFilterChange("showPlaying", e.target.checked);
+        };
+        _this.toggleWaiting = function (e) {
+            _this.props.onFilterChange("showWaiting", e.target.checked);
+        };
+        _this.toggleEmpty = function (e) {
+            _this.props.onFilterChange("showEmpty", e.target.checked);
+        };
+        _this.toggleProtected = function (e) {
+            _this.props.onFilterChange("showProtected", e.target.checked);
+        };
+        return _this;
+    }
+    ShowGames.prototype.render = function () {
+        var props = this.props;
+        return (React.createElement(React.Fragment, null,
+            React.createElement("label", null, "Show:"),
+            React.createElement("div", null,
+                React.createElement(checkbox_1.default, { checked: props.showPlaying, onChange: this.togglePlaying },
+                    React.createElement("span", { style: { color: "green" } }, "Playing")),
+                React.createElement(checkbox_1.default, { checked: props.showWaiting, onChange: this.toggleWaiting },
+                    React.createElement("span", { style: { color: "orange" } }, "Waiting")),
+                React.createElement(checkbox_1.default, { checked: props.showEmpty, onChange: this.toggleEmpty }, "Empty"),
+                React.createElement(checkbox_1.default, { checked: props.showProtected, onChange: this.toggleProtected }, "Protected"))));
+    };
+    return ShowGames;
+}(React.PureComponent));
+exports.ShowGames = ShowGames;
 
 
 /***/ }),
@@ -56949,10 +57152,44 @@ exports.ModData = {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefaultFilters_1 = __webpack_require__(/*! ../data/DefaultFilters */ "./src/data/DefaultFilters.ts");
 var CONFIG_KEY = "SAVED_CONFIG";
-// TODO: asynchronously set/reset
 var LSModule = /** @class */ (function () {
     function LSModule() {
         this.exists = localStorage !== undefined;
@@ -56977,20 +57214,30 @@ var LSModule = /** @class */ (function () {
         }
     };
     LSModule.prototype.set = function (key, data) {
-        this.savedConfig[key] = data;
-        this.save();
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.savedConfig[key] = data;
+                this.save();
+                return [2 /*return*/];
+            });
+        });
     };
     LSModule.prototype.get = function (key) {
         return this.savedConfig[key];
     };
     LSModule.prototype.reset = function () {
-        this.savedConfig = {
-            filterHasChanged: false,
-            maps: {},
-            filter: DefaultFilters_1.defaultFilters,
-            version: "0.0.1"
-        };
-        this.save();
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.savedConfig = {
+                    filterHasChanged: false,
+                    maps: {},
+                    filter: DefaultFilters_1.defaultFilters,
+                    version: "0.0.1"
+                };
+                this.save();
+                return [2 /*return*/];
+            });
+        });
     };
     return LSModule;
 }());
@@ -57045,7 +57292,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var LocalStorage_1 = __webpack_require__(/*! ./LocalStorage */ "./src/modules/LocalStorage.ts");
-var Apiz_1 = __webpack_require__(/*! ../Apiz */ "./src/Apiz.ts");
+var Api_1 = __webpack_require__(/*! ../Api */ "./src/Api.ts");
 var MapFetcher = /** @class */ (function () {
     function MapFetcher() {
         var _this = this;
@@ -57092,7 +57339,6 @@ var MapFetcher = /** @class */ (function () {
             return _this.cachedMaps[hash];
         };
         if (LocalStorage_1.storage.exists) {
-            // TODO: Load maps from local storage
             this.cachedMaps = LocalStorage_1.storage.get("maps");
         }
         // this.fetchInterval = window.setInterval(() => {
@@ -57131,7 +57377,7 @@ var MapFetcher = /** @class */ (function () {
                                     cachedMap = this.getCachedMap(hash);
                                     resolve(cachedMap); // TODO: hack :/
                                     return [3 /*break*/, 3];
-                                case 1: return [4 /*yield*/, Apiz_1.fetchMap(hash)];
+                                case 1: return [4 /*yield*/, Api_1.fetchMap(hash)];
                                 case 2:
                                     fetchedMap = (_a.sent())[0];
                                     this.cachedMaps[fetchedMap.map_hash] = fetchedMap;
@@ -57203,6 +57449,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_chunk_1 = __importDefault(__webpack_require__(/*! lodash.chunk */ "./node_modules/lodash.chunk/index.js"));
+var SPAWN_CIRCLE_BACKGROUND = "rgba(0, 0, 0, 0.3)";
+var SPAWN_CIRCLE_FONT = "10px Arial";
+var SPAWN_CIRCLE_FONT_COLOR = "white";
 function drawMiniMap(ctx, mapInfo, clients) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -57214,16 +57463,16 @@ function drawMiniMap(ctx, mapInfo, clients) {
                     minimap.onload = function () {
                         ctx.drawImage(minimap, bounds[0], bounds[1]);
                         ctx.textAlign = "center";
-                        ctx.font = "10px Arial";
+                        ctx.font = SPAWN_CIRCLE_FONT;
                         ctx.lineWidth = 2;
                         spawnPoints.forEach(function (spawn, index) {
                             var isClientSpawn = clients.find(function (client) { return !client.isspectator && client.spawnpoint - 1 === index; });
                             ctx.beginPath();
-                            ctx.fillStyle = isClientSpawn ? "#" + isClientSpawn.color : "rgba(0, 0, 0, 0.3)";
+                            ctx.fillStyle = isClientSpawn ? "#" + isClientSpawn.color : SPAWN_CIRCLE_BACKGROUND;
                             ctx.arc(spawn[0], spawn[1], 8, 0, 360);
                             ctx.fill();
                             ctx.stroke();
-                            ctx.fillStyle = "white";
+                            ctx.fillStyle = SPAWN_CIRCLE_FONT_COLOR;
                             ctx.strokeText(index.toString(), spawn[0], spawn[1] + 4); // +3 -> align vertical
                             ctx.fillText(index.toString(), spawn[0], spawn[1] + 4); // +3 -> align vertical
                         });
@@ -57249,17 +57498,17 @@ exports.drawMiniMap = drawMiniMap;
 
 /***/ }),
 
-/***/ "./src/utils/ApiCall.ts":
-/*!******************************!*\
-  !*** ./src/utils/ApiCall.ts ***!
-  \******************************/
+/***/ "./src/utils/Fetch.ts":
+/*!****************************!*\
+  !*** ./src/utils/Fetch.ts ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function apiCall(url) {
+function asyncFetch(url) {
     return fetch(url).then(function (response) {
         if (response.ok) {
             return response.json().then(function (response) { return response; });
@@ -57267,7 +57516,7 @@ function apiCall(url) {
         return response.json().then(function (error) { return ({ error: error }); });
     });
 }
-exports.apiCall = apiCall;
+exports.asyncFetch = asyncFetch;
 
 
 /***/ }),
@@ -57321,4 +57570,4 @@ exports.alphabeticalSorter = alphabeticalSorter;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=ora-games-browser.js.map

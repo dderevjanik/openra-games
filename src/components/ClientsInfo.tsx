@@ -1,6 +1,7 @@
 import * as React from "react";
 import { TGame } from "../types/TGame";
 import groupBy from "lodash.groupby";
+import Icon from "antd/lib/icon";
 
 type Props = {
   mod: string;
@@ -15,14 +16,14 @@ const Team = (props: { mod: string; team: string; members: TGame["clients"]; sho
     {props.members.map((member, index) => (
       <div key={member.name + index}>
         <img src={`icons/${props.mod}_${member.faction.toLowerCase()}.png`} />{" "}
-        {member.isspectator ? <i className="fa fa-eye" /> : null}
-        {member.isbot ? <i className="fa fa-desktop" /> : null}{" "}
+        {member.isspectator ? <Icon type="eye-o" /> : null}
+        {member.isbot ? <Icon type="desktop" /> : null}{" "}
         {props.showSpawnpoints && !member.isspectator
           ? member.spawnpoint === 0
             ? "(?)"
             : `(${member.spawnpoint - 1})`
           : ""}
-        {member.isadmin ? <i className="fa fa-user-cog" style={{ marginLeft: "5px" }} /> : null}
+        {member.isadmin ? <Icon type="star-o" style={{ marginLeft: "5px" }} /> : null}
         <span
           style={{
             color: "#" + member.color,

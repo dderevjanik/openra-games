@@ -1,6 +1,7 @@
 export type TMap = Readonly<{
   description: string;
   url: string;
+
   /**
    * number delimited by ','
    */
@@ -25,6 +26,7 @@ export type TMap = Readonly<{
   mapformat: number;
   last_revision: string;
   tileset: string;
+
   /**
    * base64 format
    */
@@ -32,11 +34,13 @@ export type TMap = Readonly<{
   map_type: string;
   revision: number;
   advanced_map: boolean;
+
   /**
    * OpenRA version
    */
   parser: string;
   viewed: number;
+
   /**
    * DateTime "2017-02-18 20:53:42.604546+00:00";
    */

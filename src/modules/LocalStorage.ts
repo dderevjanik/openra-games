@@ -3,10 +3,8 @@ import { defaultFilters } from "../data/DefaultFilters";
 
 const CONFIG_KEY = "SAVED_CONFIG";
 
-// TODO: asynchronously set/reset
-
 class LSModule {
-  // need to ignore `savedConfig`, because it is set up in `reset()`
+  // need to ignore `savedConfig` because it is set up in `reset() -after constructor was called`
 
   // @ts-ignore
   private savedConfig: TSavedConfig;
@@ -19,7 +17,7 @@ class LSModule {
     }
   }
 
-  set<K extends keyof TSavedConfig>(key: K, data: TSavedConfig[K]) {
+  async set<K extends keyof TSavedConfig>(key: K, data: TSavedConfig[K]) {
     this.savedConfig[key] = data;
     this.save();
   }
@@ -28,7 +26,7 @@ class LSModule {
     return this.savedConfig[key];
   }
 
-  reset() {
+  async reset() {
     this.savedConfig = {
       filterHasChanged: false,
       maps: {},

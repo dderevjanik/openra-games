@@ -1,6 +1,8 @@
 import * as React from "react";
+import Icon from "antd/lib/icon";
 
 const REFRESH_TIME = 30; // refresh games after 30 seconds
+const PROGRESSBAR_WIDTH = 51;
 
 type Props = {
   onRefresh: () => void;
@@ -61,10 +63,16 @@ export class RefreshButton extends React.PureComponent<Props, State> {
       <div>
         <div>
           <a className="no-focus" href="#" onClick={this.onRefreshHit}>
-            <i className={`fa ${props.isLoading ? "fa-spin" : ""} fa-sync`} /> Refresh
+            {props.isLoading ? <Icon type="loading" /> : null} Refresh
           </a>
         </div>
-        <div style={{ height: "1px", backgroundColor: "darkred", width: 65 / REFRESH_TIME * this.state.seconds }} />
+        <div
+          style={{
+            height: "1px",
+            backgroundColor: "darkred",
+            width: PROGRESSBAR_WIDTH / REFRESH_TIME * this.state.seconds
+          }}
+        />
       </div>
     );
   }

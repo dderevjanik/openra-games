@@ -18,7 +18,7 @@ export type TGameBase = {
     team: number;
   }>;
   id: number;
-  location: boolean;
+  location: string;
   map: string;
   maxplayers: number;
   mod: string;

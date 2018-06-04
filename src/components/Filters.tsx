@@ -2,11 +2,12 @@ import * as React from "react";
 
 import Row from "antd/lib/row";
 import Input from "antd/lib/input";
-import Checkbox from "antd/lib/checkbox";
 
 import { TFilter } from "../types/TFilter";
-import { AdvancedFilters } from "./AdvancedFilters";
+import { AdvancedFilters } from "./molecules/AdvancedFilters";
 import { RefreshButton } from "./RefreshButton";
+import { ShowGames } from "./molecules/ShowGames";
+import Icon from "antd/lib/icon";
 
 type Props = TFilter & {
   onFilterChange: <F extends keyof TFilter>(filter: F, value: TFilter[F]) => void;
@@ -34,24 +35,13 @@ export class Filters extends React.Component<Props, State> {
     return (
       <div className={"filters"}>
         <Row style={{ alignItems: "center" }}>
-          <label>Show:</label>
-          <div>
-            <Checkbox checked={props.showPlaying} onChange={e => props.onFilterChange("showPlaying", e.target.checked)}>
-              <span style={{ color: "green" }}>Playing</span>
-            </Checkbox>
-            <Checkbox checked={props.showWaiting} onChange={e => props.onFilterChange("showWaiting", e.target.checked)}>
-              <span style={{ color: "orange" }}>Waiting</span>
-            </Checkbox>
-            <Checkbox checked={props.showEmpty} onChange={e => props.onFilterChange("showEmpty", e.target.checked)}>
-              Empty
-            </Checkbox>
-            <Checkbox
-              checked={props.showProtected}
-              onChange={e => props.onFilterChange("showProtected", e.target.checked)}
-            >
-              Protected
-            </Checkbox>
-          </div>
+          <ShowGames
+            showPlaying={props.showPlaying}
+            showWaiting={props.showWaiting}
+            showEmpty={props.showEmpty}
+            showProtected={props.showProtected}
+            onFilterChange={props.onFilterChange}
+          />
         </Row>
 
         <Row>
@@ -65,11 +55,11 @@ export class Filters extends React.Component<Props, State> {
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div style={{ background: state.showAdvancedFilters ? "rgba(39, 45, 44, 0.5)" : "", padding: "4px 10px" }}>
             <a href="#" onClick={() => this.setState({ showAdvancedFilters: !this.state.showAdvancedFilters })}>
-              <i className="fa fa-filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
+              <Icon type="filter" /> {state.showAdvancedFilters ? "Hide" : "Show"} advanced filters
             </a>{" "}
             {props.filterHasChanged ? (
               <a href="#" onClick={props.onResetFilters} style={{ marginLeft: "10px" }}>
-                <i className="fa fa-times" /> Reset Filters
+                <Icon type="close" /> Reset Filters
               </a>
             ) : null}
           </div>

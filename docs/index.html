@@ -13,10 +13,8 @@
   <meta property="og:url" content="https://www.openra.net/">
   <meta property="og:image" content="https://www.openra.net/images/og-image.png">
   <title>OpenRA - Games</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-    crossorigin="anonymous">
 
-  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="ora-games-browser.css">
   <script async="" src="./OpenRA - Games_files/analytics.js.download"></script>
 
   <script src="./OpenRA - Games_files/jquery-1.9.1.min.js.download"></script>
@@ -145,8 +143,10 @@
       <a href="http://www.openra.net/legal/">Legal notices</a>)</p>
   </div>
 
-  <script src="app.js"></script>
-
+  <script src="ora-games-browser.js"></script>
+  <script>
+    gamesBrowser.mount(document.getElementById('app'));
+  </script>
 
   <div id="flotTip" style="display: none; position: absolute;"></div>
 </body>

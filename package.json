@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development --config ./webpack.config.js --watch",
-    "build": "webpack --mode production --config ./webpack.config.js"
+    "prod": "webpack --mode production --config ./webpack.config.js"
   },
   "author": {
     "name": "Daniel Derevjanik",
@@ -16,12 +16,12 @@
     "css-loader": "^0.28.11",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
-    "prettier": "^1.12.1",
+    "prettier": "^1.13.4",
     "style-loader": "^0.21.0",
-    "ts-loader": "^4.3.0",
-    "typescript": "^2.8.3",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.4"
+    "ts-loader": "^4.3.1",
+    "typescript": "^2.9.1",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^3.0.1"
   },
   "dependencies": {
     "@types/lodash.chunk": "^4.2.3",

@@ -1,8 +1,9 @@
 import * as React from "react";
 import Fuzzy from "fuzzysearch";
 import { TGame } from "./types/TGame";
-import { Map } from "./components/Map";
-import { fetchGames, fetchOpenRAVersions } from "./Apiz";
+import { Map } from "./components/molecules/Map";
+import { fetchGames, fetchOpenRAVersions } from "./Api";
+import { ServerName } from "./components/molecules/ServerName";
 // import {  Table, Tooltip, Pagination } from "antd";
 
 import Layout from "antd/lib/layout";
@@ -16,16 +17,16 @@ import { Filters } from "./components/Filters";
 import { TMap } from "./types/TMap";
 import "./styles/main.less";
 import { ClientsInfo } from "./components/ClientsInfo";
-import { ClientLabel } from "./components/ClientLabel";
+import { ClientLabel } from "./components/atoms/ClientLabel";
 import { EGameState } from "./types/EGameState";
 import { GamesCounter } from "./components/GamesCounter";
-import { JoinButton } from "./components/JoinButton";
-import { GameInfo } from "./components/GameInfo";
+import { JoinButton } from "./components/atoms/JoinButton";
 import { alphabeticalSorter } from "./utils/Sorters";
 import { isJoinable } from "./utils/Predicates";
 import { defaultFilters } from "./data/DefaultFilters";
 import { storage } from "./modules/LocalStorage";
 import { Playtime } from "./components/Playtime";
+import Icon from "antd/lib/icon";
 
 type State = {
   games: TGame[];
@@ -158,8 +159,11 @@ export class App extends React.Component<{}, State> {
   toggleExpandedRow = (key: number) => {
     const isExpanded = this.state.expandedRows.includes(key);
     if (isExpanded) {
-      // TODO: Optimize
-      const expandedRows = this.state.expandedRows.filter(k => k !== key);
+      const elIndex = this.state.expandedRows.indexOf(key);
+      const expandedRows = [
+        ...this.state.expandedRows.slice(0, elIndex),
+        ...this.state.expandedRows.slice(elIndex + 1)
+      ];
       this.setState({
         expandedRows
       });
@@ -232,40 +236,17 @@ export class App extends React.Component<{}, State> {
                     onClick={() => this.toggleExpandedRow(record.id)}
                     style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
                   >
-                    <Tooltip
-                      getPopupContainer={target => target as HTMLElement}
-                      title={
-                        <GameInfo
-                          allVersions={state.versions}
-                          address={record.address}
-                          gameVersion={record.version}
-                          location={record.location}
-                          mod={record.mod}
-                        />
-                      }
-                    >
-                      <div style={{ marginRight: "15px" }}>
-                        <img src={`icons/${record.mod}.png`} height={24} />
-                      </div>
-                    </Tooltip>
-                    {record.protected ? (
-                      <Tooltip
-                        title={<small>Game is password protected</small>}
-                        getPopupContainer={target => target as HTMLElement}
-                      >
-                        <small style={{ marginLeft: "5px" }}>
-                          <i className="fa fa-lock" />
-                        </small>
-                      </Tooltip>
-                    ) : null}{" "}
-                    <span
-                      style={{
-                        marginLeft: "5px",
-                        color: record.state === 2 ? "green" : record.players > 0 ? "orange" : ""
-                      }}
-                    >
-                      {record.name}
-                    </span>
+                    <ServerName
+                      address={record.address}
+                      gameVersion={record.version}
+                      isLatestVersion={record.version === this.state.versions[0]}
+                      isProtected={record.protected}
+                      state={record.state}
+                      location={record.location}
+                      mod={record.mod}
+                      players={record.players}
+                      serverName={record.name}
+                    />
                     {/* <MapName mapHash={record.map} /> */}
                   </div>
                 ),
@@ -282,7 +263,7 @@ export class App extends React.Component<{}, State> {
                 title={<small>players / max. players</small>}
                 getPopupContainer={target => target as HTMLElement}
               >
-                <i className="fa fa-users" />
+                <Icon type="team" />
               </Tooltip>
             }
             width={90}
@@ -296,7 +277,7 @@ export class App extends React.Component<{}, State> {
           />
           <Table.Column
             key="clients"
-            title={<i className="fa fa-user" />}
+            title={<Icon type="user" />}
             width={100}
             render={(_, record: TGame) => <ClientLabel game={record} />}
           />
@@ -304,7 +285,7 @@ export class App extends React.Component<{}, State> {
             key="addons"
             title={
               <div style={{ textAlign: "right" }}>
-                <i className="fa fa-clock" />
+                <Icon type="clock-circle-o" />
               </div>
             }
             width={50}

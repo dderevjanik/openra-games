@@ -1,8 +1,11 @@
 import * as React from "react";
+
 import Tag from "antd/lib/tag";
 import Tooltip from "antd/lib/tooltip";
-import { TGame } from "../types/TGame";
-import { ClientsInfo } from "./ClientsInfo";
+import Icon from "antd/lib/icon";
+
+import { TGame } from "../../types/TGame";
+import { ClientsInfo } from "../ClientsInfo";
 
 type Props = {
   game: TGame;
@@ -27,19 +30,19 @@ export const ClientLabel = (props: Props) => {
       <Tag>
         {props.game.players > 0 ? (
           <span>
-            <i className="fa fa-user" />
+            <Icon type="user" />
             {" " + props.game.players + " "}
           </span>
         ) : null}
         {props.game.bots > 0 ? (
           <span>
-            <i className="fa fa-desktop" />
+            <Icon type="desktop" />
             {" " + props.game.bots + " "}
           </span>
         ) : null}
         {props.game.spectators > 0 ? (
           <span>
-            <i className="fa fa-eye" />
+            <Icon type="eye-o" />
             {" " + props.game.spectators + " "}
           </span>
         ) : null}
