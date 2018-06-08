@@ -3,20 +3,23 @@ import { TMap } from "../types/TMap";
 import { fetchMap } from "../Api";
 
 class MapFetcher {
-  private readonly cachedMaps: { [hash: string]: TMap } = {};
+  private cachedMaps: { [hash: string]: TMap } = {};
   private readonly waitingList: { [hash: string]: ((map: TMap) => void)[] } = {};
 
   // @ts-ignore
   private readonly fetchInterval: number;
 
-  constructor() {
-    if (storage.exists) {
-      this.cachedMaps = storage.get("maps");
-    }
+  // constructor() {
+  //   if (storage.exists) {
+  //     this.cachedMaps = storage.get("maps") || {};
+  //   }
 
-    // this.fetchInterval = window.setInterval(() => {
-    //   this.tryToFetchMaps();
-    // }, 5000);
+  //   // this.fetchInterval = window.setInterval(() => {
+  //   //   this.tryToFetchMaps();
+  //   // }, 5000);
+  // }
+  loadMapsFromStorage() {
+    this.cachedMaps = storage.get("maps");
   }
 
   // private tryToFetchMaps = () => {

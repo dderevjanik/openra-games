@@ -10,7 +10,14 @@ type Props = {
   showSpawnpoints: boolean;
 };
 
-const Team = (props: { mod: string; team: string; members: TGame["clients"]; showSpawnpoints: boolean }) => (
+type TeamProps = {
+  mod: string;
+  team: string;
+  members: TGame["clients"];
+  showSpawnpoints: boolean;
+};
+
+const Team: React.SFC<TeamProps> = props => (
   <div style={{ padding: "2px" }}>
     <div style={{ textAlign: "left" }}>{props.team === "0" ? "No Team" : "Team " + props.team}</div>
     {props.members.map((member, index) => (
@@ -37,7 +44,7 @@ const Team = (props: { mod: string; team: string; members: TGame["clients"]; sho
   </div>
 );
 
-export const ClientsInfo = (props: Props) => {
+export const ClientsInfo: React.SFC<Props> = props => {
   const teams = groupBy(props.clients, "team");
   return (
     <div

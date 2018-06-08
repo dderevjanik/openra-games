@@ -1,5 +1,5 @@
 import { TSavedConfig } from "../types/TSavedConfig";
-import { defaultFilters } from "../data/DefaultFilters";
+import { TFilter } from "../types/TFilter";
 
 const CONFIG_KEY = "SAVED_CONFIG";
 
@@ -8,6 +8,8 @@ class LSModule {
 
   // @ts-ignore
   private savedConfig: TSavedConfig;
+  // @ts-ignore
+  private defaultFilters: TFilter;
   readonly exists: boolean;
 
   private save() {
@@ -27,13 +29,28 @@ class LSModule {
   }
 
   async reset() {
+    if (!this.defaultFilters) {
+      throw new Error("default filters are not defined!");
+    }
     this.savedConfig = {
       filterHasChanged: false,
       maps: {},
-      filter: defaultFilters,
+      filter: this.defaultFilters,
       version: "0.0.1"
     };
     this.save();
+  }
+
+  setDefaultFilters(filters: TFilter) {
+    this.defaultFilters = filters;
+    if (!this.savedConfig) {
+      this.savedConfig = {
+        filterHasChanged: false,
+        maps: {},
+        filter: filters,
+        version: "0.0.1"
+      };
+    }
   }
 
   constructor() {
@@ -44,10 +61,10 @@ class LSModule {
         const parsed = JSON.parse(config) as TSavedConfig;
         this.savedConfig = parsed;
       } else {
-        this.reset();
+        // this.reset();
       }
     } else {
-      this.reset();
+      // this.reset();
     }
   }
 }

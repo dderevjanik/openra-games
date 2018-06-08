@@ -1,7 +1,9 @@
 import * as React from "react";
 import Button from "antd/lib/button";
 
-export const JoinButton = (props: { version: string; address: string }) => (
+type Props = { version: string; address: string };
+
+export const JoinButton: React.SFC<Props> = props => (
   <Button type="ghost" href={`openra-ra-${props.version}://${props.address}`} size="small">
     Join
   </Button>

@@ -5,7 +5,7 @@ type Props = {
   total: number;
 };
 
-export const GamesCounter = (props: Props) => (
+export const GamesCounter: React.SFC<Props> = props => (
   <div style={{ textAlign: "center", color: "grey" }}>
     <small>
       {props.current} / {props.total}

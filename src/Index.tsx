@@ -4,12 +4,13 @@ import { App } from "./App";
 import { TFilter } from "./types/TFilter";
 import { storage } from "./modules/LocalStorage";
 import { defaultFilters } from "./data/DefaultFilters";
+import { mapFetcher } from "./modules/MapFetcher";
 
 export const Component = App;
 
 export function mount(el: HTMLDivElement, defaultConfig?: Partial<TFilter>) {
-  if (storage.exists) {
-    storage.set("filter", { ...defaultFilters, ...defaultConfig });
-  }
+  const filters = defaultConfig ? { ...defaultFilters, ...defaultConfig } : defaultFilters;
+  storage.setDefaultFilters(filters);
+  mapFetcher.loadMapsFromStorage();
   render(<App />, el);
 }

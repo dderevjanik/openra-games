@@ -16,7 +16,7 @@ type Props = {
   isProtected: boolean;
 };
 
-export const ServerName = (props: Props) => (
+export const ServerName: React.SFC<Props> = props => (
   <>
     <Tooltip
       getPopupContainer={target => target as HTMLElement}

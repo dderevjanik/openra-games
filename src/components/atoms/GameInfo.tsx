@@ -8,7 +8,7 @@ type Props = {
   mod: string;
 };
 
-export const GameInfo = (props: Props) => (
+export const GameInfo: React.SFC<Props> = props => (
   <div>
     <div>
       <b>Mod:</b> {props.mod}

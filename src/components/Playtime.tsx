@@ -4,7 +4,7 @@ type Props = {
   playtime: number;
 };
 
-export const Playtime = (props: Props) => {
+export const Playtime: React.SFC<Props> = (props: Props) => {
   if (props.playtime) {
     if (props.playtime >= 3600) {
       const hours = parseInt((props.playtime / 3600).toFixed(0));
@@ -12,7 +12,7 @@ export const Playtime = (props: Props) => {
       return (
         <small style={{ color: "grey" }}>
           <span>{hours}h</span>
-          <span>{minutes}m</span>
+          <span> {minutes}m</span>
         </small>
       );
     } else {

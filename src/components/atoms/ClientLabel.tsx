@@ -11,7 +11,7 @@ type Props = {
   game: TGame;
 };
 
-export const ClientLabel = (props: Props) => {
+export const ClientLabel: React.SFC<Props> = props => {
   if (props.game.clients.length === 0) {
     return null;
   }
